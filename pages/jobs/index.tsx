@@ -1,10 +1,11 @@
-import { FC, Fragment } from "react";
+import { FC } from "react";
 
 import Recents from "../../components/PopularSearches/Recents";
+import Layout from "../../components/UI/Layout";
 
 const Jobs: FC = function () {
   return (
-    <Fragment>
+    <Layout>
       <header>
         <div className="container">
           <div className="h-48 flex items-center">
@@ -54,7 +55,7 @@ const Jobs: FC = function () {
           </div>
         </div>
       </main>
-    </Fragment>
+    </Layout>
   );
 };
 
