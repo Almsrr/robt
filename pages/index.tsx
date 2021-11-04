@@ -1,11 +1,16 @@
+import { useEffect } from "react";
+
 import type { NextPage } from "next";
+import { useRouter } from "next/router";
 
 const Home: NextPage = function () {
-  return (
-    <div>
-      <h1>Robt</h1>
-    </div>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/jobs");
+  }, [router]);
+
+  return <div></div>;
 };
 
 export default Home;
