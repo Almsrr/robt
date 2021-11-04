@@ -1,12 +1,14 @@
 import type { AppProps } from "next/app";
 import "../styles/globals.css";
-import Layout from "../components/UI/Layout";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+
+import AuthContextProvider from "../store/auth-context";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Layout>
+    <AuthContextProvider>
       <Component {...pageProps} />
-    </Layout>
+    </AuthContextProvider>
   );
 }
 
