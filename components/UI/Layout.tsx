@@ -7,7 +7,9 @@ const Layout: FC = function (props) {
     <Fragment>
       <Navigation />
       {props.children}
-      <footer>&copy; 2021 Robt</footer>
+      <footer>
+        <div className="container">&copy; 2021 Robt</div>
+      </footer>
     </Fragment>
   );
 };
