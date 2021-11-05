@@ -27,7 +27,7 @@ const LoginPage: FC = function () {
 
     authCtx.login(enteredEmail).then((success) => {
       if (success) {
-        router.replace(`/candidate/almsrr`);
+        router.replace(`/candidate/almsrr/dashboard`);
       }
     });
   };

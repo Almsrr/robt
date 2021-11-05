@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import Layout from "../../../components/UI/Layout";
 
-const MessagePage: FC = () => {
+const MessagesPage: FC = () => {
   return (
     <Layout>
       <h1>Messages</h1>
@@ -10,4 +10,4 @@ const MessagePage: FC = () => {
   );
 };
 
-export default MessagePage;
+export default MessagesPage;
