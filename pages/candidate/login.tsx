@@ -1,8 +1,9 @@
-import { FC, useContext, useRef } from "react";
+import { FC, useRef } from "react";
 
 import { useRouter } from "next/router";
 
-import { AuthContext } from "../../store/auth-context";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { loginUser } from "../../app/authSlice";
 
 const LoginPage: FC = function () {
   const router = useRouter();
@@ -10,7 +11,8 @@ const LoginPage: FC = function () {
   const passwordInput = useRef<HTMLInputElement>(null);
   const keepSignedInput = useRef<HTMLInputElement>(null);
 
-  const authCtx = useContext(AuthContext);
+  const userIsAuth = useAppSelector((state) => state.auth.isAuth);
+  const dispatch = useAppDispatch();
 
   const loginHandler = (event: React.FormEvent) => {
     event.preventDefault();
@@ -25,11 +27,8 @@ const LoginPage: FC = function () {
       return;
     }
 
-    authCtx.login(enteredEmail).then((success) => {
-      if (success) {
-        router.replace(`/candidate/almsrr/dashboard`);
-      }
-    });
+    dispatch(loginUser());
+    router.push("/jobs");
   };
 
   return (
