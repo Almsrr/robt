@@ -1,7 +1,8 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import type { ThunkAction } from "redux-thunk";
 import { ActionCreator, AnyAction } from "redux";
 import { RootState } from "./store";
+import { setUser, clearUser } from "./userSlice";
 
 interface AuthState {
   token: string;
@@ -32,6 +33,14 @@ export const loginUser: ActionCreator<
   ThunkAction<void, RootState, unknown, AnyAction>
 > = () => (dispatch) => {
   dispatch(login());
+  dispatch(setUser({ username: "alam", email: "alam@domain.com" }));
+};
+
+export const logoutUser: ActionCreator<
+  ThunkAction<void, RootState, unknown, AnyAction>
+> = () => (dispatch) => {
+  dispatch(logout());
+  dispatch(clearUser());
 };
 
 // export const loginUSER: ThunkAction<void, RootState, unknown, AnyAction> = (

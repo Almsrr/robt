@@ -2,8 +2,9 @@ import { FC, useRef } from "react";
 
 import { useRouter } from "next/router";
 
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
+import { useAppDispatch } from "../../app/hooks";
 import { loginUser } from "../../app/authSlice";
+import { setUser } from "../../app/userSlice";
 
 const LoginPage: FC = function () {
   const router = useRouter();
@@ -11,7 +12,6 @@ const LoginPage: FC = function () {
   const passwordInput = useRef<HTMLInputElement>(null);
   const keepSignedInput = useRef<HTMLInputElement>(null);
 
-  const userIsAuth = useAppSelector((state) => state.auth.isAuth);
   const dispatch = useAppDispatch();
 
   const loginHandler = (event: React.FormEvent) => {
@@ -28,6 +28,8 @@ const LoginPage: FC = function () {
     }
 
     dispatch(loginUser());
+    dispatch(setUser({ username: "myname", email: "myname@domain.com" }));
+
     router.push("/jobs");
   };
 
