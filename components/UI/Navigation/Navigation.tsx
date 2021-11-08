@@ -1,7 +1,6 @@
 import { FC } from "react";
 
 import Link from "next/link";
-
 import NavLink from "./NavLink";
 import UserNav from "./UserNav";
 import { useAppSelector } from "../../../app/hooks";
