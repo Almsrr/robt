@@ -15,8 +15,10 @@ const LoginPage: FC = function () {
     axios
       .post("/api/login", { email, password })
       .then((response) => {
-        dispatch(loginUser(response.data));
-        router.push("/jobs");
+        const { token, name, username } = response.data;
+
+        dispatch(loginUser({ token, name, username, email }));
+        router.push(`/candidate/${username}`);
       })
       .catch(() => {
         alert("Something went wrong, please try again");

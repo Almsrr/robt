@@ -4,7 +4,6 @@ type Data = {
   token: string;
   name: string;
   username: string;
-  email: string;
 };
 
 export default function handler(
@@ -13,10 +12,9 @@ export default function handler(
 ) {
   setTimeout(() => {
     res.status(200).json({
-      token: "123",
+      token: "123s",
       name: "Alam Sierra",
       username: "almsrr",
-      email: "alam@domain.com",
     });
   }, 1500);
 }

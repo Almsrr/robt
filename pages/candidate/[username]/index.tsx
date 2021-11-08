@@ -1,10 +1,10 @@
 import { FC } from "react";
 
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import { ParsedUrlQuery } from "querystring";
+// import { InferGetServerSidePropsType, GetServerSideProps } from "next";
+// import { ParsedUrlQuery } from "querystring";
 import Image from "next/image";
-
 import Layout from "../../../components/UI/Layout";
+import { useAppSelector } from "../../../app/hooks";
 
 const someUsers = [
   {
@@ -19,15 +19,21 @@ const someUsers = [
     name: "Marcelo Erizo",
     email: "mclerz@domain.com",
   },
+  {
+    id: "321s",
+    username: "jsesrr",
+    name: "Josue Sierra",
+    email: "jsesierra@domain.com",
+  },
 ];
 
-interface IParams extends ParsedUrlQuery {
-  username: string;
-}
+// interface IParams extends ParsedUrlQuery {
+//   username: string;
+// }
 
-const UserDashboard: FC = function ({
-  user,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+const UserDashboard: FC = function ({}) {
+  const user = useAppSelector((state) => state.user);
+
   return (
     <Layout>
       <div className="max-w-xl mx-auto mt-8">
@@ -139,22 +145,13 @@ const UserDashboard: FC = function ({
   );
 };
 
-export const getStaticPaths: GetStaticPaths = async function () {
-  const paths = someUsers.map((user) => ({
-    params: { username: user.username },
-  }));
+// export const getServerSideProps: GetServerSideProps = async function (context) {
+//   const { username } = context.params as IParams;
+//   const user = someUsers.find((user) => user.username === username);
 
-  return { paths, fallback: false };
-};
-
-export const getStaticProps: GetStaticProps = async function (context) {
-  const { username } = context.params as IParams;
-
-  const user = someUsers.find((user) => user.username === username);
-
-  return {
-    props: { user },
-  };
-};
+//   return {
+//     props: { user },
+//   };
+// };
 
 export default UserDashboard;
