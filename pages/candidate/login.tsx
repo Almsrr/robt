@@ -3,7 +3,7 @@ import { FC } from "react";
 import { useRouter } from "next/router";
 
 import { useAppDispatch } from "../../app/hooks";
-import { loginUser } from "../../app/authSlice";
+import { login } from "../../app/authSlice";
 import axios from "axios";
 import LoginForm from "../../components/LoginForm";
 
@@ -15,10 +15,10 @@ const LoginPage: FC = function () {
     axios
       .post("/api/login", { email, password })
       .then((response) => {
-        const { token, name, username } = response.data;
+        const { token, username } = response.data;
 
-        dispatch(loginUser({ token, name, username, email }));
-        router.push(`/candidate/${username}`);
+        dispatch(login({ token, username }));
+        router.push(`/candidate/${username}/dashboard`);
       })
       .catch(() => {
         alert("Something went wrong, please try again");

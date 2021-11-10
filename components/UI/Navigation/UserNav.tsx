@@ -6,14 +6,14 @@ import { useAppSelector } from "../../../app/hooks";
 
 const RightUserMenu: FC = function () {
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const username = useAppSelector((state) => state.user.username);
+  const username = useAppSelector((state) => state.auth.username);
 
   const toggleUserMenu = () => {
     setShowUserMenu((prevState) => !prevState);
   };
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center h-full">
       <Link href={`/candidate/${username}/messages`}>
         <a className="px-3 text-lg">
           <i className="fas fa-comment-alt"></i>

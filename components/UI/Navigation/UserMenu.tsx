@@ -3,14 +3,12 @@ import { FC } from "react";
 import Link from "next/link";
 import { useAppDispatch } from "../../../app/hooks";
 import { logout } from "../../../app/authSlice";
-import { clearUser } from "../../../app/userSlice";
 
 const UserMenu: FC<{ username: string | null }> = function (props) {
   const dispatch = useAppDispatch();
 
   const logoutHandler = () => {
     dispatch(logout());
-    dispatch(clearUser());
   };
 
   return (

@@ -5,25 +5,30 @@ import { RootState } from "./store";
 import { setUser } from "./userSlice";
 
 interface AuthState {
-  token: string;
+  token: string | null;
   isAuth: boolean;
+  username: string | null;
 }
 
 const authInitialState: AuthState = {
-  token: "",
+  token: null,
   isAuth: false,
+  username: null,
 };
 
 const AuthSlice = createSlice({
   name: "Authentication",
   initialState: authInitialState,
   reducers: {
-    login(state, action: PayloadAction<string>) {
-      state.token = action.payload;
+    login(state, action: PayloadAction<{ token: string; username: string }>) {
+      state.token = action.payload.token;
       state.isAuth = true;
+      state.username = action.payload.username;
     },
     logout(state) {
       state.isAuth = false;
+      state.token = null;
+      state.username = null;
     },
   },
 });
