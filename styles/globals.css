@@ -63,6 +63,6 @@ h1 {
   color: #fff;
 }
 
-input {
+.form-input {
   @apply border border-black p-2;
 }
