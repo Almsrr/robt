@@ -9,7 +9,7 @@ const Navigation: FC = function () {
   const userIsAuth = useAppSelector((state) => state.auth.isAuth);
 
   let rightLinks = (
-    <div className="flex items-center">
+    <div className="flex items-center h-full">
       <span>Sign in</span>
       <span className="inline-block bg-black w-px h-5 mx-3"></span>
       <Link href="/candidate/login">

@@ -1,9 +1,9 @@
 import { FC } from "react";
 
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
-
 import Layout from "../../../components/UI/Layout";
+import { loadUserFromDb } from "../../../app/db-functions";
 
 const someUsers = [
   {
@@ -26,11 +26,11 @@ interface IParams extends ParsedUrlQuery {
 
 const UserDashboard: FC = function ({
   user,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <Layout>
       <div className="container">
-        <h1 className="font-bold text-4xl">{user.name}</h1>
+        <h1 className="font-bold text-4xl">{user.firstName}</h1>
         <p>Username: {user.username}</p>
         <p>Email: {user.email}</p>
       </div>
@@ -38,18 +38,9 @@ const UserDashboard: FC = function ({
   );
 };
 
-export const getStaticPaths: GetStaticPaths = async function () {
-  const paths = someUsers.map((user) => ({
-    params: { username: user.username },
-  }));
-
-  return { paths, fallback: false };
-};
-
-export const getStaticProps: GetStaticProps = async function (context) {
+export const getServerSideProps: GetServerSideProps = async function (context) {
   const { username } = context.params as IParams;
-
-  const user = someUsers.find((user) => user.username === username);
+  const user = await loadUserFromDb(username);
 
   return {
     props: { user },
