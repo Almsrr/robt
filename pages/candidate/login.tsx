@@ -29,8 +29,8 @@ const LoginPage: FC = function () {
     <main>
       <section>
         <div className="container">
-          <div className="flex justify-center w-full flex-col h-screen">
-            <h1 className="font-bold text-3xl text-center pb-3">Robt</h1>
+          <div className="w-full h-screen flex flex-col justify-center">
+            <span className="pb-3 text-center font-bold text-4xl">Robt</span>
             <LoginForm onLogin={loginHandler} />
           </div>
         </div>

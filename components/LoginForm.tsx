@@ -1,5 +1,8 @@
 import { FC, useRef } from "react";
 
+import Link from "next/link";
+import CustomLink from "./UI/CustomLink";
+
 interface loginFormProps {
   onLogin: (email: string, password: string) => void;
 }
@@ -25,16 +28,15 @@ const LoginForm: FC<loginFormProps> = function (props) {
   };
 
   return (
-    <form
-      onSubmit={submitHandler}
-      className="w-96 mx-auto border border-gray-400 rounded p-4"
-    >
-      <h1 className="font-bold text-xl mb-1">Sign in</h1>
-      <p className="mb-2 text-sm">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Excepturi
-        aliquam voluptatem reiciendis, quisquam at dignissimos.
+    <form onSubmit={submitHandler} className="form">
+      <h1 className="text-xl mb-1">Sign in</h1>
+      <p className="mb-3 text-sm">
+        By signing in to your account, you agree to Robt&apos;s{" "}
+        <CustomLink>Terms of Service</CustomLink> and consent to our{" "}
+        <CustomLink>Cookie Policy</CustomLink> and{" "}
+        <CustomLink>Privacy Policy</CustomLink>.
       </p>
-      <div>
+      <div className="form-row">
         <input
           ref={emailInput}
           type="text"
@@ -42,15 +44,20 @@ const LoginForm: FC<loginFormProps> = function (props) {
           className="w-full border border-black p-2 mb-3"
         />
       </div>
-      <div>
+      <div className="form-row">
         <input
           ref={passwordInput}
           type="password"
           placeholder="Password"
-          className="w-full border border-black p-2 mb-3"
+          className="w-full border border-black p-2 mb-1"
         />
+        <Link href="#">
+          <a className="text-sm text-gray-600 cursor-point">
+            Forgot your password?
+          </a>
+        </Link>
       </div>
-      <div>
+      <div className="form-row">
         <input
           ref={keepSignedInput}
           type="checkbox"
@@ -59,26 +66,35 @@ const LoginForm: FC<loginFormProps> = function (props) {
         />
         <label htmlFor="keep-signed">Keep me signed on this device</label>
       </div>
-      <button
-        type="submit"
-        className="block mt-5 bg-black text-white w-full p-2 rounded-lg font-bold"
-      >
-        Log in
-      </button>
-      <div className="socials">
-        <div className="text-center w-full py-2">or</div>
+      <div className="form-row">
+        <button
+          type="submit"
+          className="block bg-black text-white w-full p-2 rounded-lg font-bold"
+        >
+          Sign in
+        </button>
+      </div>
+      <div className="socials flex flex-col">
+        <span className="text-center mb-3">or</span>
         <button
           type="button"
-          className="block text-center w-full py-2 border border-black rounded-lg font-bold mb-2"
+          className="py-2 mb-2 text-center border border-black rounded-lg font-bold"
         >
           Sign in with Google
         </button>
         <button
           type="button"
-          className="block text-center w-full py-2 border border-black rounded-lg font-bold "
+          className="py-2 text-center py-2 border border-black rounded-lg font-bold"
         >
           Sign in with Facebook
         </button>
+      </div>
+      <div className="pt-4">
+        <Link href="register">
+          <a className="text-sm text-center font-bold block">
+            New to Robt? Create an account
+          </a>
+        </Link>
       </div>
     </form>
   );
