@@ -41,3 +41,28 @@ h1 {
 .form-row {
   @apply pb-3;
 }
+
+.page {
+  min-height: max-content;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+.btn {
+  @apply p-2 inline-block border border-black rounded-lg font-bold;
+  overflow: hidden;
+}
+
+.btn-simple {
+  background-color: inherit;
+  color: #000;
+}
+
+.btn-inverted {
+  background-color: #000;
+  color: #fff;
+}
+
+input {
+  @apply border border-black p-2;
+}

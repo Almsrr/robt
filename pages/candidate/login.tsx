@@ -26,15 +26,15 @@ const LoginPage: FC = function () {
   };
 
   return (
-    <main>
-      <section>
-        <div className="container">
-          <div className="w-full h-screen flex flex-col justify-center">
-            <span className="pb-3 text-center font-bold text-4xl">Robt</span>
-            <LoginForm onLogin={loginHandler} />
-          </div>
-        </div>
-      </section>
+    <main className="page">
+      <div className="container">
+        <section>
+          <span className="block pb-3 text-center font-bold text-4xl">
+            Robt
+          </span>
+          <LoginForm onLogin={loginHandler} />
+        </section>
+      </div>
     </main>
   );
 };

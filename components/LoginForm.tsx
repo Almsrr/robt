@@ -39,9 +39,9 @@ const LoginForm: FC<loginFormProps> = function (props) {
       <div className="form-row">
         <input
           ref={emailInput}
-          type="text"
+          type="email"
           placeholder="Email"
-          className="w-full border border-black p-2 mb-3"
+          className="w-full"
         />
       </div>
       <div className="form-row">
@@ -49,48 +49,45 @@ const LoginForm: FC<loginFormProps> = function (props) {
           ref={passwordInput}
           type="password"
           placeholder="Password"
-          className="w-full border border-black p-2 mb-1"
+          className="w-full"
         />
         <Link href="#">
-          <a className="text-sm text-gray-600 cursor-point">
+          <a className="text-sm text-gray-600 cursor-point mt-1">
             Forgot your password?
           </a>
         </Link>
       </div>
       <div className="form-row">
-        <input
-          ref={keepSignedInput}
-          type="checkbox"
-          id="keep-signed"
-          className="mr-2"
-        />
-        <label htmlFor="keep-signed">Keep me signed on this device</label>
+        <div className="flex items-center">
+          <input
+            ref={keepSignedInput}
+            type="checkbox"
+            id="keep-signed"
+            className="mr-2"
+          />
+          <label htmlFor="keep-signed">Keep me signed on this device</label>
+        </div>
+      </div>
+      <button type="submit" className="btn btn-inverted w-full">
+        Sign in
+      </button>
+      <div className="form-row mt-3">
+        <div className="flex flex-col">
+          <span className="text-center">or</span>
+        </div>
       </div>
       <div className="form-row">
-        <button
-          type="submit"
-          className="block bg-black text-white w-full p-2 rounded-lg font-bold"
-        >
-          Sign in
-        </button>
+        <div className="socials flex flex-col">
+          <button type="button" className="btn btn-simple w-full mb-2">
+            Sign in with Google
+          </button>
+          <button type="button" className="btn btn-simple w-full">
+            Sign in with Facebook
+          </button>
+        </div>
       </div>
-      <div className="socials flex flex-col">
-        <span className="text-center mb-3">or</span>
-        <button
-          type="button"
-          className="py-2 mb-2 text-center border border-black rounded-lg font-bold"
-        >
-          Sign in with Google
-        </button>
-        <button
-          type="button"
-          className="py-2 text-center py-2 border border-black rounded-lg font-bold"
-        >
-          Sign in with Facebook
-        </button>
-      </div>
-      <div className="pt-4">
-        <Link href="register">
+      <div className="mt-1">
+        <Link href="/candidate/register">
           <a className="text-sm text-center font-bold block">
             New to Robt? Create an account
           </a>
