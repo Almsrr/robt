@@ -9,17 +9,13 @@ const Navigation: FC = function () {
   const userIsAuth = useAppSelector((state) => state.auth.isAuth);
 
   let rightLinks = (
-    <div className="flex items-center h-full">
-      <span>Sign in</span>
-      <span className="inline-block bg-black w-px h-5 mx-3"></span>
-      <Link href="/candidate/login">
-        <a className="font-bold">Candidate</a>
+    <li className="flex items-center h-full">
+      <Link href="/users/login">
+        <a className="py-2 px-3 border border-gray-400 rounded-lg font-bold">
+          Sign in
+        </a>
       </Link>
-      <span className="px-2">or</span>
-      <Link href="/employeer/login">
-        <a className="font-bold">Employeer</a>
-      </Link>
-    </div>
+    </li>
   );
 
   if (userIsAuth) {
@@ -27,10 +23,10 @@ const Navigation: FC = function () {
   }
 
   return (
-    <nav className="border-b border-gray-200">
-      <div className="container py-4">
-        <div className="flex">
-          <span className="text-2xl font-bold mr-5">
+    <nav className="border-b border-gray-200 h-16">
+      <div className="container h-full">
+        <div className="flex items-center h-full">
+          <span className="logo">
             <Link href="/">
               <a>Robt</a>
             </Link>
@@ -46,7 +42,7 @@ const Navigation: FC = function () {
               <NavLink to="/companies">Companies</NavLink>
             </li>
           </ul>
-          <div className="ml-auto">{rightLinks}</div>
+          <ul className="ml-auto inline-flex">{rightLinks}</ul>
         </div>
       </div>
     </nav>
