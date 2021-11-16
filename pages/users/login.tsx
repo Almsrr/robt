@@ -13,12 +13,14 @@ const LoginPage: FC = function () {
 
   const loginHandler = (email: string, password: string) => {
     axios
-      .post("/api/login", { email, password })
+      .post("/api/users/login", { email, password })
       .then((response) => {
-        const { token, username } = response.data;
+        const { success, token, id: userId } = response.data;
 
-        dispatch(login({ token, username }));
-        router.push(`/candidate/${username}/dashboard`);
+        if (success) {
+          dispatch(login({ token, userId }));
+          router.push(`/users/${userId}/dashboard`);
+        }
       })
       .catch(() => {
         alert("Something went wrong, please try again");

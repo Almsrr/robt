@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { createNewUser, loadUser } from "../../../app/db-functions";
+import { createNewUser, loadUser } from "./db-functions";
 import { v4 as uuidv4 } from "uuid";
 
 interface dbResult {

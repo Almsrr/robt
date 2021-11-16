@@ -1,5 +1,5 @@
 import mysql, { OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
-import User from "../models/User";
+import User from "../../../models/User";
 
 const pool = mysql.createPool({
   connectionLimit: 50,
@@ -162,4 +162,34 @@ const getUserPassword = (field: string, value: string) => {
   });
 };
 
-export { loadUser, createNewUser, getUserPassword };
+const getUserId = (field: string, value: string) => {
+  const selectQuery = mysql.format("SELECT user_id FROM User WHERE ??=?", [
+    field,
+    value,
+  ]);
+  return new Promise<string>(async (resolve) => {
+    try {
+      pool.getConnection((error, con) => {
+        if (error) throw new Error(error.message);
+
+        con.query(selectQuery, (error, results) => {
+          if (error) throw new Error(error.message);
+
+          const rows = <RowDataPacket[]>results;
+
+          if (rows.length > 0) {
+            const userId = rows[0].user_id;
+            resolve(userId);
+          } else {
+            resolve("");
+          }
+        });
+      });
+    } catch (error: any) {
+      console.log(error.message);
+      resolve("");
+    }
+  });
+};
+
+export { loadUser, createNewUser, getUserPassword, getUserId };

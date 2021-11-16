@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { loadUser } from "../../../app/db-functions";
+import { loadUser } from "./db-functions";
 
 export default async function handler(
   req: NextApiRequest,
