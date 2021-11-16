@@ -7,28 +7,28 @@ import { setUser } from "./userSlice";
 interface AuthState {
   token: string | null;
   isAuth: boolean;
-  username: string | null;
+  userId: string | null;
 }
 
 const authInitialState: AuthState = {
   token: null,
   isAuth: false,
-  username: null,
+  userId: null,
 };
 
 const AuthSlice = createSlice({
   name: "Authentication",
   initialState: authInitialState,
   reducers: {
-    login(state, action: PayloadAction<{ token: string; username: string }>) {
+    login(state, action: PayloadAction<{ token: string; userId: string }>) {
       state.token = action.payload.token;
       state.isAuth = true;
-      state.username = action.payload.username;
+      state.userId = action.payload.userId;
     },
     logout(state) {
       state.isAuth = false;
       state.token = null;
-      state.username = null;
+      state.userId = null;
     },
   },
 });

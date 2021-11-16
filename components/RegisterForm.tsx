@@ -1,16 +1,46 @@
-import { FC, useRef } from "react";
+import React, { FC, useRef } from "react";
 
 import CustomLink from "./UI/CustomLink";
+import User from "../models/User";
+import Account from "../models/Account";
 
-const RegisterForm: FC<{ onRegister: () => void }> = function () {
+const RegisterForm: FC<{ onRegister: (account: Account) => void }> = function (
+  props
+) {
+  const firstNameRef = useRef<HTMLInputElement>(null);
+  const lastNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const keepSignedRef = useRef<HTMLInputElement>(null);
   const employeerRef = useRef<HTMLInputElement>(null);
   const candidateRef = useRef<HTMLInputElement>(null);
 
+  const submitHandler = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const firstName = firstNameRef.current!.value;
+    const lastName = lastNameRef.current!.value;
+    const email = emailRef.current!.value;
+    const password = passwordRef.current!.value;
+
+    if (email.length === 0) {
+      return;
+    }
+    if (password.length === 0) {
+      return;
+    }
+
+    let role = "";
+    if (employeerRef.current!.checked) {
+      role = "employeer";
+    } else if (candidateRef.current!.checked) {
+      role = "job-seeker";
+    }
+    props.onRegister(new Account(firstName, lastName, role, email, password));
+  };
+
   return (
-    <form className="form">
+    <form className="form" onSubmit={submitHandler}>
       <h1 className="text-xl mb-2">Create an Account (It&apos;s free) </h1>
       <p className="text-sm mb-3">
         By creating an account, you agree to Robt&apos;s{" "}
@@ -36,16 +66,48 @@ const RegisterForm: FC<{ onRegister: () => void }> = function () {
           <span className="text-center">or</span>
         </div>
       </div>
-      <div className="form-row mb-4">
-        <label className="block font-bold">Email Address</label>
-        <input ref={emailRef} type="email" className="form-input w-full" />
+      <div className="form-row">
+        <label htmlFor="first-name" className="block font-bold">
+          First Name
+        </label>
+        <input
+          ref={firstNameRef}
+          type="text"
+          className="form-input w-full"
+          id="first-name"
+        />
+      </div>
+      <div className="form-row">
+        <label htmlFor="lastName" className="block font-bold">
+          Last Name
+        </label>
+        <input
+          ref={lastNameRef}
+          type="text"
+          className="form-input w-full"
+          id="last-name"
+        />
+      </div>
+      <div className="form-row">
+        <label htmlFor="email" className="block font-bold">
+          Email Address
+        </label>
+        <input
+          ref={emailRef}
+          type="email"
+          className="form-input w-full"
+          id="email"
+        />
       </div>
       <div className="form-row mb-4">
-        <label className="block font-bold">Password</label>
+        <label htmlFor="password" className="block font-bold">
+          Password
+        </label>
         <input
           ref={passwordRef}
           type="password"
           className="form-input w-full"
+          id="password"
         />
       </div>
       <div className="form-row mb-4">
@@ -54,27 +116,33 @@ const RegisterForm: FC<{ onRegister: () => void }> = function () {
           Let us know how you&apos;ll be using our products
         </p>
         <div className="flex flex-col pt-2">
-          <label id="employeer" className="flex items-center mb-1">
+          <label
+            htmlFor="employeer"
+            className="flex items-center border border-gray-500 rounded-lg p-2 text-sm mb-2"
+          >
             <input
               type="radio"
               id="employeer"
               ref={employeerRef}
               name="role"
               value="employeer"
-              className="mr-1"
+              className="mr-2"
             />
             <span>Employeer</span>
           </label>
-          <label id="candidate" className="flex items-center">
+          <label
+            htmlFor="job-seeker"
+            className="flex items-center border border-gray-500 rounded-lg p-2 text-sm"
+          >
             <input
               type="radio"
-              id="candidate"
+              id="job-seeker"
               ref={candidateRef}
               name="role"
-              value="candidate"
-              className="mr-1"
+              value="job-seeker"
+              className="mr-2"
             />
-            <span>Candidate</span>
+            <span>Job seeker</span>
           </label>
         </div>
       </div>
