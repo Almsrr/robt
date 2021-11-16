@@ -3,7 +3,7 @@ import { FC } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
 import Layout from "../../../components/UI/Layout";
-import { loadUserFromDb } from "../../../app/db-functions";
+// import { loadUser } from "../../../app/db-functions";
 
 const someUsers = [
   {
@@ -40,7 +40,9 @@ const UserDashboard: FC = function ({
 
 export const getServerSideProps: GetServerSideProps = async function (context) {
   const { username } = context.params as IParams;
-  const user = await loadUserFromDb(username);
+  // const user = await loadUser(username);
+
+  const user = {};
 
   return {
     props: { user },

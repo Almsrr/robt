@@ -2,20 +2,23 @@ export default class User {
   id: string;
   firstName: string;
   lastName: string;
-  username: string;
+  role: string;
   email: string;
+  password: string;
 
   constructor(
     id: string,
     firstName: string,
     lastName: string,
-    username: string,
-    email: string
+    role: string,
+    email: string,
+    password: string
   ) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.username = username;
+    this.role = role;
     this.email = email;
+    this.password = password;
   }
 }
