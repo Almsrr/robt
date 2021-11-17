@@ -3,12 +3,15 @@ import { FC } from "react";
 import Link from "next/link";
 import { useAppDispatch } from "../../../app/hooks";
 import { logout } from "../../../app/authSlice";
+import { useRouter } from "next/router";
 
 const UserMenu: FC<{ userId: string | null }> = function (props) {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const logoutHandler = () => {
     dispatch(logout());
+    // router.push("/");
   };
 
   return (
