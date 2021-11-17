@@ -11,39 +11,80 @@ const pool = mysql.createPool({
   debug: false,
 });
 
-const serverToken = "123";
-
-interface userData {
-  id: string;
-  firstName: string;
-  lastName: string;
-  role: string;
+interface accountInfo {
+  accountId: string;
   email: string;
+  role: string;
+  status: number;
 }
 
-export const loadUser = (field: string, value: string) => {
-  const query = mysql.format("SELECT * FROM User WHERE ??=?", [field, value]);
+interface userInfo {
+  userId: string;
+  firstName: string;
+  lastName: string;
+}
 
-  return new Promise<userData | null>((resolve) => {
+export const getAccount = (accountId: string) => {
+  const accountQuery = mysql.format(
+    "SELECT account_id, email, role, status FROM Account WHERE account_id=?",
+    [accountId]
+  );
+
+  return new Promise<accountInfo | null>((resolve) => {
     try {
       pool.getConnection((error, con) => {
         if (error) throw new Error(error.message);
 
-        con.query(query, (error, results) => {
+        con.query(accountQuery, (error, results) => {
           if (error) throw new Error(error.message);
 
           const rows = <RowDataPacket[]>results;
-          // console.log(rows);
+          console.log(rows);
 
           if (rows.length > 0) {
-            resolve({
-              id: rows[0].user_id,
+            const account = {
+              accountId: rows[0].account_id,
+              email: rows[0].email,
+              role: rows[0].role,
+              status: rows[0].status,
+            };
+            resolve(account);
+          } else {
+            resolve(null);
+          }
+        });
+      });
+    } catch (error: any) {
+      console.log(error.message);
+      resolve(null);
+    }
+  });
+};
+
+export const getUser = (accountId: string) => {
+  const userQuery = mysql.format(
+    "SELECT user_id, first_name, last_name FROM User WHERE account=?",
+    [accountId]
+  );
+
+  return new Promise<userInfo | null>((resolve) => {
+    try {
+      pool.getConnection((error, con) => {
+        if (error) throw new Error(error.message);
+
+        con.query(userQuery, (error, results) => {
+          if (error) throw new Error(error.message);
+
+          const rows = <RowDataPacket[]>results;
+          console.log(rows);
+
+          if (rows.length > 0) {
+            const user = {
+              userId: rows[0].user_id,
               firstName: rows[0].first_name,
               lastName: rows[0].last_name,
-              role: rows[0].role,
-              email: rows[0].email,
-              // password: rows[0].password,
-            });
+            };
+            resolve(user);
           } else {
             resolve(null);
           }
