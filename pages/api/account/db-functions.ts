@@ -162,8 +162,8 @@ export const createNewAccount = async (newAccount: Account) => {
   );
 };
 
-export const getUserPassword = (field: string, value: string) => {
-  const selectQuery = mysql.format("SELECT password FROM User WHERE ??=?", [
+export const getAccountPassword = (field: string, value: string) => {
+  const selectQuery = mysql.format("SELECT password FROM Account WHERE ??=?", [
     field,
     value,
   ]);
@@ -178,8 +178,8 @@ export const getUserPassword = (field: string, value: string) => {
           const rows = <RowDataPacket[]>results;
 
           if (rows.length > 0) {
-            const userPassword = rows[0].password;
-            resolve(userPassword);
+            const accountPassword = rows[0].password;
+            resolve(accountPassword);
           } else {
             resolve("");
           }
@@ -192,11 +192,11 @@ export const getUserPassword = (field: string, value: string) => {
   });
 };
 
-export const getUserId = (field: string, value: string) => {
-  const selectQuery = mysql.format("SELECT user_id FROM User WHERE ??=?", [
-    field,
-    value,
-  ]);
+export const getAccountId = (field: string, value: string) => {
+  const selectQuery = mysql.format(
+    "SELECT account_id FROM Account WHERE ??=?",
+    [field, value]
+  );
   return new Promise<string>(async (resolve) => {
     try {
       pool.getConnection((error, con) => {
@@ -208,8 +208,8 @@ export const getUserId = (field: string, value: string) => {
           const rows = <RowDataPacket[]>results;
 
           if (rows.length > 0) {
-            const userId = rows[0].user_id;
-            resolve(userId);
+            const accountId = rows[0].account_id;
+            resolve(accountId);
           } else {
             resolve("");
           }
