@@ -1,4 +1,5 @@
 import mysql, { OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
+import Account from "../../../models/Account";
 import User from "../../../models/User";
 
 const pool = mysql.createPool({
@@ -20,7 +21,7 @@ interface userData {
   email: string;
 }
 
-const loadUser = (field: string, value: string) => {
+export const loadUser = (field: string, value: string) => {
   const query = mysql.format("SELECT * FROM User WHERE ??=?", [field, value]);
 
   return new Promise<userData | null>((resolve) => {
@@ -55,7 +56,7 @@ const loadUser = (field: string, value: string) => {
   });
 };
 
-const userAlreadyExist = (table: string, field: string, value: string) => {
+export const alreadyExists = (table: string, field: string, value: string) => {
   const selectQuery = mysql.format("SELECT * FROM ?? WHERE ??=?", [
     table,
     field,
@@ -86,31 +87,60 @@ const userAlreadyExist = (table: string, field: string, value: string) => {
   });
 };
 
-const createNewUser = async (newUser: User) => {
-  const { id, firstName, lastName, role, email, password } = newUser;
+export const createNewUser = async (newUser: User) => {
+  const { id, account } = newUser;
 
-  const insertQuery = mysql.format(
-    "INSERT INTO User (user_id, first_name, last_name, role, email, password) VALUES (?, ?, ?, ?, ?, ?)",
-    [id, firstName, lastName, role, email, password]
+  const userQuery = mysql.format(
+    "INSERT INTO User (user_id, account) VALUES (?, ?)",
+    [id, account]
+  );
+
+  return new Promise<boolean>((resolve) => {
+    try {
+      pool.getConnection((error, con) => {
+        if (error) throw new Error(error.message);
+
+        //execute query
+        con.query(userQuery, (error, results) => {
+          if (error) throw new Error(error.message);
+
+          resolve(true);
+        });
+      });
+    } catch (error: any) {
+      console.log(error.message);
+      resolve(false);
+    }
+  });
+};
+
+export const createNewAccount = async (newAccount: Account) => {
+  const { id, email, password, role, status } = newAccount;
+
+  const accountQuery = mysql.format(
+    "INSERT INTO Account (account_id, email, password, role, status) VALUES (?, ?, ?, ?, ?)",
+    [id, email, password, role, status]
   );
 
   return new Promise<{ success: boolean; error: boolean; data: any }>(
     async (resolve) => {
-      const userExists = await userAlreadyExist("User", "email", email);
+      const accountExists = await alreadyExists("Account", "email", email);
 
-      if (!userExists) {
+      if (!accountExists) {
+        //if account email doesn't exist
         try {
           pool.getConnection((error, con) => {
             if (error) throw new Error(error.message);
 
-            con.query(insertQuery, (error, results) => {
+            //execute query
+            con.query(accountQuery, (error, results) => {
               if (error) throw new Error(error.message);
 
               // console.log(results);
               resolve({
                 success: true,
                 error: false,
-                data: id,
+                data: null,
               });
             });
           });
@@ -132,7 +162,7 @@ const createNewUser = async (newUser: User) => {
   );
 };
 
-const getUserPassword = (field: string, value: string) => {
+export const getUserPassword = (field: string, value: string) => {
   const selectQuery = mysql.format("SELECT password FROM User WHERE ??=?", [
     field,
     value,
@@ -162,7 +192,7 @@ const getUserPassword = (field: string, value: string) => {
   });
 };
 
-const getUserId = (field: string, value: string) => {
+export const getUserId = (field: string, value: string) => {
   const selectQuery = mysql.format("SELECT user_id FROM User WHERE ??=?", [
     field,
     value,
@@ -191,5 +221,3 @@ const getUserId = (field: string, value: string) => {
     }
   });
 };
-
-export { loadUser, createNewUser, getUserPassword, getUserId };
