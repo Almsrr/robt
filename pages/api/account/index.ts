@@ -21,7 +21,7 @@ export default async function handler(
         status: 1,
       };
 
-      console.log(receivedAccount);
+      // console.log(receivedAccount);
 
       let accountResult: dbResult = await createNewAccount(receivedAccount);
       let userCreated = false;
