@@ -1,21 +1,21 @@
 export default class Account {
-  firstName: string;
-  lastName: string;
-  role: string;
+  id: string;
   email: string;
   password: string;
+  role: string;
+  status: number;
 
   constructor(
-    firstName: string,
-    lastName: string,
-    role: string,
+    id: string,
     email: string,
-    password: string
+    password: string,
+    role: string,
+    status: number
   ) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.role = role;
+    this.id = id;
     this.email = email;
     this.password = password;
+    this.role = role;
+    this.status = status;
   }
 }

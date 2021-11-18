@@ -6,7 +6,7 @@ import { useAppSelector } from "../../../app/hooks";
 
 const RightUserMenu: FC = function () {
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const userId = useAppSelector((state) => state.auth.userId);
+  const { userId, userRole } = useAppSelector((state) => state.user);
 
   const toggleUserMenu = () => {
     setShowUserMenu((prevState) => !prevState);
@@ -15,14 +15,14 @@ const RightUserMenu: FC = function () {
   return (
     <Fragment>
       <li>
-        <Link href={`/users/${userId}/messages`}>
+        <Link href={`/${userRole}/${userId}/messages`}>
           <a className="px-3 text-lg">
             <i className="fas fa-comment-alt"></i>
           </a>
         </Link>
       </li>
       <li>
-        <Link href={`/users/${userId}/notifications`}>
+        <Link href={`/${userRole}/${userId}/notifications`}>
           <a className="px-3 text-xl">
             <i className="fas fa-bell"></i>
           </a>
@@ -32,7 +32,7 @@ const RightUserMenu: FC = function () {
         <button className="px-3 text-xl" type="button" onClick={toggleUserMenu}>
           <i className="fas fa-user"></i>
         </button>
-        {showUserMenu && <UserMenu userId={userId} />}
+        {showUserMenu && <UserMenu />}
       </li>
     </Fragment>
   );

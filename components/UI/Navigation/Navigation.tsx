@@ -10,7 +10,7 @@ const Navigation: FC = function () {
 
   let rightLinks = (
     <li className="flex items-center h-full">
-      <Link href="/users/login">
+      <Link href="/account/login">
         <a className="py-2 px-3 border border-gray-400 rounded-lg font-bold">
           Sign in
         </a>

@@ -1,25 +1,17 @@
 import React, { FC, useRef } from "react";
 
 import CustomLink from "./UI/CustomLink";
-import User from "../models/User";
-import Account from "../models/Account";
 
-const RegisterForm: FC<{ onRegister: (account: Account) => void }> = function (
-  props
-) {
-  const firstNameRef = useRef<HTMLInputElement>(null);
-  const lastNameRef = useRef<HTMLInputElement>(null);
+const RegisterForm: FC<{ onRegister: (data: any) => void }> = function (props) {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const keepSignedRef = useRef<HTMLInputElement>(null);
   const employeerRef = useRef<HTMLInputElement>(null);
-  const candidateRef = useRef<HTMLInputElement>(null);
+  const jobSeekerRef = useRef<HTMLInputElement>(null);
 
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const firstName = firstNameRef.current!.value;
-    const lastName = lastNameRef.current!.value;
     const email = emailRef.current!.value;
     const password = passwordRef.current!.value;
 
@@ -33,10 +25,10 @@ const RegisterForm: FC<{ onRegister: (account: Account) => void }> = function (
     let role = "";
     if (employeerRef.current!.checked) {
       role = "employeer";
-    } else if (candidateRef.current!.checked) {
+    } else if (jobSeekerRef.current!.checked) {
       role = "job-seeker";
     }
-    props.onRegister(new Account(firstName, lastName, role, email, password));
+    props.onRegister({ email, password, role });
   };
 
   return (
@@ -65,28 +57,6 @@ const RegisterForm: FC<{ onRegister: (account: Account) => void }> = function (
         <div className="flex flex-col">
           <span className="text-center">or</span>
         </div>
-      </div>
-      <div className="form-row">
-        <label htmlFor="first-name" className="block font-bold">
-          First Name
-        </label>
-        <input
-          ref={firstNameRef}
-          type="text"
-          className="form-input w-full"
-          id="first-name"
-        />
-      </div>
-      <div className="form-row">
-        <label htmlFor="lastName" className="block font-bold">
-          Last Name
-        </label>
-        <input
-          ref={lastNameRef}
-          type="text"
-          className="form-input w-full"
-          id="last-name"
-        />
       </div>
       <div className="form-row">
         <label htmlFor="email" className="block font-bold">
@@ -137,7 +107,7 @@ const RegisterForm: FC<{ onRegister: (account: Account) => void }> = function (
             <input
               type="radio"
               id="job-seeker"
-              ref={candidateRef}
+              ref={jobSeekerRef}
               name="role"
               value="job-seeker"
               className="mr-2"
