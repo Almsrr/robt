@@ -1,52 +1,43 @@
-import { FC } from "react";
-
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { ParsedUrlQuery } from "querystring";
+
+import { ReactElement } from "react";
+
+import type { NextPageWithLayout } from "../../_app";
 import Layout from "../../../components/UI/Layout";
+import { ParsedUrlQuery } from "querystring";
 // import { loadUser } from "../../../app/db-functions";
 
-const someUsers = [
-  {
-    id: "123s",
-    username: "almsrr",
-    name: "Alam Sierra",
-    email: "almsrr@domain.com",
-  },
-  {
-    id: "321s",
-    username: "mclerz",
-    name: "Marcelo Erizo",
-    email: "mclerz@domain.com",
-  },
-];
-
+//Context obj type
 interface IParams extends ParsedUrlQuery {
   username: string;
 }
 
-const UserDashboard: FC = function ({
-  user,
+const AccountDashboard: NextPageWithLayout = function ({
+  account,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
-    <Layout>
+    <>
       <div className="container">
-        <h1 className="font-bold text-4xl">{user.firstName}</h1>
-        <p>Username: {user.username}</p>
-        <p>Email: {user.email}</p>
+        <h1 className="font-bold text-4xl">{}</h1>
+        <p>Email: {}</p>
       </div>
-    </Layout>
+    </>
   );
+};
+
+AccountDashboard.getLayout = (page: ReactElement) => {
+  return <Layout>{page}</Layout>;
 };
 
 export const getServerSideProps: GetServerSideProps = async function (context) {
   const { username } = context.params as IParams;
   // const user = await loadUser(username);
 
-  const user = {};
+  const account = {};
 
   return {
-    props: { user },
+    props: { account },
   };
 };
 
-export default UserDashboard;
+export default AccountDashboard;

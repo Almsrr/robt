@@ -1,13 +1,18 @@
-import { FC } from "react";
+import type { ReactElement } from "react";
 
+import type { NextPageWithLayout } from "../../_app";
 import Layout from "../../../components/UI/Layout";
 
-const NotificationsPage: FC = () => {
+const NotificationsPage: NextPageWithLayout = function () {
   return (
-    <Layout>
+    <>
       <h1>Notifications</h1>
-    </Layout>
+    </>
   );
+};
+
+NotificationsPage.getLayout = (page: ReactElement) => {
+  return <Layout>{page}</Layout>;
 };
 
 export default NotificationsPage;

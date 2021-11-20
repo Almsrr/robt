@@ -1,6 +1,7 @@
+import Link from "next/link";
+
 import { FC, useRef } from "react";
 
-import Link from "next/link";
 import CustomLink from "./UI/CustomLink";
 
 interface loginFormProps {
@@ -87,7 +88,7 @@ const LoginForm: FC<loginFormProps> = function (props) {
         </div>
       </div>
       <div className="mt-1">
-        <Link href="./register">
+        <Link href="/account/register">
           <a className="text-sm text-center font-bold block">
             New to Robt? Create an account
           </a>

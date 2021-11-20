@@ -1,41 +1,13 @@
-import { FC } from "react";
-
-// import { InferGetServerSidePropsType, GetServerSideProps } from "next";
-// import { ParsedUrlQuery } from "querystring";
 import Image from "next/image";
+
+import { ReactElement } from "react";
+
+import type { NextPageWithLayout } from "../../_app";
 import Layout from "../../../components/UI/Layout";
-import { useAppSelector } from "../../../app/hooks";
 
-const someUsers = [
-  {
-    id: "123s",
-    username: "almsrr",
-    name: "Alam Sierra",
-    email: "almsrr@domain.com",
-  },
-  {
-    id: "321s",
-    username: "mclerz",
-    name: "Marcelo Erizo",
-    email: "mclerz@domain.com",
-  },
-  {
-    id: "321s",
-    username: "jsesrr",
-    name: "Josue Sierra",
-    email: "jsesierra@domain.com",
-  },
-];
-
-// interface IParams extends ParsedUrlQuery {
-//   username: string;
-// }
-
-const UserDashboard: FC = function ({}) {
-  const user = useAppSelector((state) => state.user);
-
+const Profilepage: NextPageWithLayout = function () {
   return (
-    <Layout>
+    <>
       <div className="max-w-xl mx-auto mt-8">
         <header className="pb-5">
           <div className="flex items-center">
@@ -46,7 +18,7 @@ const UserDashboard: FC = function ({}) {
               height={100}
             />
             <div className="ml-4">
-              <h1 className="font-bold text-4xl">{user.name}</h1>
+              <h1 className="font-bold text-4xl">{}</h1>
               <p>Santo Domingo, DR</p>
             </div>
           </div>
@@ -106,8 +78,7 @@ const UserDashboard: FC = function ({}) {
                 </span>
               </label>
               <p className="font-bold">
-                {user.email}{" "}
-                <button className="text-blue-600 text-xs mx-2">edit</button>
+                {} <button className="text-blue-600 text-xs mx-2">edit</button>
               </p>
             </div>
             <div className="pt-4">
@@ -141,8 +112,12 @@ const UserDashboard: FC = function ({}) {
           </section>
         </div>
       </div>
-    </Layout>
+    </>
   );
+};
+
+Profilepage.getLayout = (page: ReactElement) => {
+  return <Layout>{page}</Layout>;
 };
 
 // export const getServerSideProps: GetServerSideProps = async function (context) {
@@ -154,4 +129,4 @@ const UserDashboard: FC = function ({}) {
 //   };
 // };
 
-export default UserDashboard;
+export default Profilepage;

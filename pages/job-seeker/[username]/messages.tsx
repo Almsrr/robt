@@ -1,13 +1,18 @@
-import { FC } from "react";
+import type { ReactElement } from "react";
 
+import type { NextPageWithLayout } from "../../_app";
 import Layout from "../../../components/UI/Layout";
 
-const MessagesPage: FC = () => {
+const MessagesPage: NextPageWithLayout = () => {
   return (
-    <Layout>
+    <>
       <h1>Messages</h1>
-    </Layout>
+    </>
   );
+};
+
+MessagesPage.getLayout = (page: ReactElement) => {
+  return <Layout>{page}</Layout>;
 };
 
 export default MessagesPage;
