@@ -1,11 +1,12 @@
-import { FC } from "react";
+import type { ReactElement } from "react";
 
-import Recents from "../../components/PopularSearches/Recents";
+import type { NextPageWithLayout } from "../_app";
 import Layout from "../../components/UI/Layout";
+import Recents from "../../components/PopularSearches/Recents";
 
-const Jobs: FC = function () {
+const Jobs: NextPageWithLayout = function () {
   return (
-    <Layout>
+    <>
       <header>
         <div className="container">
           <div className="h-48 flex items-center">
@@ -55,8 +56,12 @@ const Jobs: FC = function () {
           </div>
         </div>
       </main>
-    </Layout>
+    </>
   );
+};
+
+Jobs.getLayout = (page: ReactElement) => {
+  return <Layout>{page}</Layout>;
 };
 
 export default Jobs;

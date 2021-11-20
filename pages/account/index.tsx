@@ -1,15 +1,15 @@
-import { FC, useEffect } from "react";
-
 import { useRouter } from "next/router";
 
-const IndexPage: FC = function () {
+import { useEffect } from "react";
+
+const IndexPage = function () {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace(`${router.pathname}/login`);
-  }, [router]);
+    router.replace("/account/login");
+  });
 
-  return <div></div>;
+  return <></>;
 };
 
 export default IndexPage;

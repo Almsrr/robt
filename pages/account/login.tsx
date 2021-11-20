@@ -1,14 +1,14 @@
-import { FC } from "react";
-
 import { useRouter } from "next/router";
+
+import axios from "axios";
 
 import { useAppDispatch } from "../../app/hooks";
 import { login } from "../../app/authSlice";
 import { setUser } from "../../app/userSlice";
-import axios from "axios";
+import type { NextPageWithLayout } from "../_app";
 import LoginForm from "../../components/LoginForm";
 
-const LoginPage: FC = function () {
+const LoginPage: NextPageWithLayout = function () {
   const router = useRouter();
   const dispatch = useAppDispatch();
 

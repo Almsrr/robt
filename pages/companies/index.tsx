@@ -1,13 +1,18 @@
-import { FC } from "react";
+import type { ReactElement } from "react";
 
+import type { NextPageWithLayout } from "../_app";
 import Layout from "../../components/UI/Layout";
 
-const CompaniesPage: FC = function () {
+const CompaniesPage: NextPageWithLayout = function () {
   return (
-    <Layout>
+    <>
       <h1>Companies</h1>
-    </Layout>
+    </>
   );
+};
+
+CompaniesPage.getLayout = (page: ReactElement) => {
+  return <Layout>{page}</Layout>;
 };
 
 export default CompaniesPage;

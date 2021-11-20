@@ -1,15 +1,16 @@
-import { FC } from "react";
-
-import RegisterForm from "../../components/RegisterForm";
 import { useRouter } from "next/router";
+
 import axios from "axios";
-import { useDispatch } from "react-redux";
+
 import { login } from "../../app/authSlice";
 import { setUser } from "../../app/userSlice";
+import { useAppDispatch } from "../../app/hooks";
+import type { NextPageWithLayout } from "../_app";
+import RegisterForm from "../../components/RegisterForm";
 
-const RegisterPage: FC = function () {
+const RegisterPage: NextPageWithLayout = function () {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const registerHandler = (newAccountData: any) => {
     // console.log(newUserAccount);
