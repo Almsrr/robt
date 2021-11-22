@@ -2,24 +2,22 @@ import { FC } from "react";
 
 import Link from "next/link";
 import NavLink from "./NavLink";
-import UserNav from "./UserNav";
-import { useAppSelector } from "../../../app/hooks";
+import AccountNav from "./AccountNav";
+import useAppSelector from "../../../hooks/useAppSelector";
 
 const Navigation: FC = function () {
-  const userIsAuth = useAppSelector((state) => state.auth.isAuth);
+  const { isAuth } = useAppSelector((state) => state.auth);
 
-  let rightLinks = (
-    <li className="flex items-center h-full">
-      <Link href="/account/login">
-        <a className="py-2 px-3 border border-gray-400 rounded-lg font-bold">
-          Sign in
-        </a>
-      </Link>
-    </li>
+  let customNav = (
+    <Link href="/account/login">
+      <a className="inline-block py-2 px-3 border border-gray-400 rounded-lg font-bold">
+        Sign in
+      </a>
+    </Link>
   );
 
-  if (userIsAuth) {
-    rightLinks = <UserNav />;
+  if (isAuth) {
+    customNav = <AccountNav />;
   }
 
   return (
@@ -42,7 +40,7 @@ const Navigation: FC = function () {
               <NavLink to="/companies">Companies</NavLink>
             </li>
           </ul>
-          <ul className="ml-auto inline-flex">{rightLinks}</ul>
+          <div className="ml-auto">{customNav}</div>
         </div>
       </div>
     </nav>

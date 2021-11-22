@@ -2,11 +2,12 @@ import { useRouter } from "next/router";
 
 import axios from "axios";
 
-import { useAppDispatch } from "../../app/hooks";
-import { login } from "../../app/authSlice";
-import { setUser } from "../../app/userSlice";
+import useAppDispatch from "../../hooks/useAppDispatch";
+import { login } from "../../store/authSlice";
+import { setAccount } from "../../store/accountSlice";
 import type { NextPageWithLayout } from "../_app";
 import LoginForm from "../../components/LoginForm";
+import { saveAccountLocally } from "../../app/locale-functions";
 
 const LoginPage: NextPageWithLayout = function () {
   const router = useRouter();
@@ -16,13 +17,19 @@ const LoginPage: NextPageWithLayout = function () {
     axios
       .post("/api/account/login", { email, password })
       .then((response) => {
-        const { success, token, id: userId, role: userRole } = response.data;
+        const {
+          success,
+          token,
+          id: accountId,
+          role: accountRole,
+        } = response.data;
 
         if (success) {
           dispatch(login({ token }));
-          dispatch(setUser({ userId, userRole }));
+          dispatch(setAccount({ id: accountId, role: accountRole }));
+          saveAccountLocally({ token, accountId, accountRole });
 
-          router.replace(`/${userRole}/${userId}/dashboard`);
+          router.replace(`/${accountRole}/${accountId}/dashboard`);
         }
       })
       .catch(() => {

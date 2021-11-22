@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { useAppSelector } from "../../app/hooks";
+import useAppSelector from "../../hooks/useAppSelector";
 import Navigation from "./Navigation/Navigation";
 import Footer from "./Footer/Footer";
 import ChatBox from "../Chat/ChatBox";

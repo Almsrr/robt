@@ -2,11 +2,12 @@ import { useRouter } from "next/router";
 
 import axios from "axios";
 
-import { login } from "../../app/authSlice";
-import { setUser } from "../../app/userSlice";
-import { useAppDispatch } from "../../app/hooks";
+import { login } from "../../store/authSlice";
+import { setAccount } from "../../store/accountSlice";
+import useAppDispatch from "../../hooks/useAppDispatch";
 import type { NextPageWithLayout } from "../_app";
 import RegisterForm from "../../components/RegisterForm";
+import { saveAccountLocally } from "../../app/locale-functions";
 
 const RegisterPage: NextPageWithLayout = function () {
   const router = useRouter();
@@ -19,14 +20,15 @@ const RegisterPage: NextPageWithLayout = function () {
       .post("/api/account", newAccountData)
       .then((response) => {
         if (response.status === 200) {
-          const { token, id: userId } = response.data;
-          const userRole = newAccountData.role;
+          const { token, id: accountId } = response.data;
+          const accountRole = newAccountData.role;
 
           dispatch(login({ token }));
-          dispatch(setUser({ userId, userRole }));
+          dispatch(setAccount({ id: accountId, role: accountRole }));
+          saveAccountLocally({ token, accountId, accountRole });
 
-          alert("User registered successfully");
-          router.replace(`/${userRole}/${userId}/dashboard`);
+          alert("Account registered successfully");
+          router.replace(`/${accountRole}/${accountId}/dashboard`);
         } else {
           alert("Something went wrong");
         }
