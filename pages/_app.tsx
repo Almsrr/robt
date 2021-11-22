@@ -6,7 +6,7 @@ import "../styles/globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import { Provider } from "react-redux";
-import store from "../app/store";
+import store from "../store/index";
 
 //New type that add getLayout property to pages
 export type NextPageWithLayout = NextPage & {

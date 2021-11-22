@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { ThunkAction } from "redux-thunk";
 import { ActionCreator, AnyAction } from "redux";
-import { RootState } from "./store";
-import { setUser } from "./userSlice";
+import { RootState } from ".";
 
 interface AuthState {
   token: string | null;
