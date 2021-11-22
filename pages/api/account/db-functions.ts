@@ -39,7 +39,7 @@ export const getAccount = (accountId: string) => {
           if (error) throw new Error(error.message);
 
           const rows = <RowDataPacket[]>results;
-          console.log(rows);
+          // console.log(rows);
 
           if (rows.length > 0) {
             const account = {
@@ -76,7 +76,7 @@ export const getUser = (accountId: string) => {
           if (error) throw new Error(error.message);
 
           const rows = <RowDataPacket[]>results;
-          console.log(rows);
+          // console.log(rows);
 
           if (rows.length > 0) {
             const user = {

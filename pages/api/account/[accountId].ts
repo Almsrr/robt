@@ -19,6 +19,15 @@ export default async function handler(
       }
       break;
 
+    case "POST":
+      const userId = req.query.accountId.toString();
+      const info = req.body;
+
+      console.log(userId);
+      console.log(info);
+      res.status(200).send("");
+      break;
+
     default:
       res.status(501);
       break;
