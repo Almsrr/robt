@@ -16,7 +16,7 @@ interface AccountInfo {
   role: string;
   firstName: string | null;
   lastName: string | null;
-  phoneNumber: string;
+  phoneNumber: string | null;
 }
 
 const Profilepage: NextPageWithLayout = function () {
@@ -24,29 +24,44 @@ const Profilepage: NextPageWithLayout = function () {
     id: "",
     email: "",
     role: "",
-    firstName: null,
-    lastName: null,
+    firstName: "",
+    lastName: "",
     phoneNumber: "",
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [previewMode, setPreviewMode] = useState<boolean>(true);
   const router = useRouter();
 
-  let userAccountName: string;
-  if (account.firstName && account.lastName) {
-    userAccountName = `${account.firstName} ${account.lastName}`;
-  } else {
-    userAccountName = "Your name";
-  }
+  let userFirstName = "";
+  let userLastName = "";
+  let userPhoneNumber = "";
+  let userFullName = "Your name";
 
-  const saveInformationHandler = (firstName: string, lastName: string) => {
+  if (account.firstName && account.lastName) {
+    userFullName = `${account.firstName} ${account.lastName}`;
+    userFirstName = account.firstName;
+    userLastName = account.lastName;
+  }
+  if (account.phoneNumber) userPhoneNumber = account.phoneNumber;
+
+  const togglePreviewHandler = () => {
+    setPreviewMode((prevState) => !prevState);
+  };
+
+  const saveInfoHandler = (firstName: string, lastName: string) => {
+    setIsLoading(true);
     const url = `/api/account/${account.id}`;
 
     axios.post(url, { firstName, lastName }).then((response) => {
       alert("Information updated successfully!");
+      setAccount({ ...account, firstName, lastName });
+      setPreviewMode(true);
+      setIsLoading(false);
     });
   };
 
   useEffect(() => {
+    // console.log("EFFECT!");
     const id = router.query.accountId;
     const url = `/api/account/${id}`;
     axios
@@ -61,7 +76,7 @@ const Profilepage: NextPageWithLayout = function () {
           role: fetchedAccount.role,
           firstName: fetchedAccount.firstName,
           lastName: fetchedAccount.lastName,
-          phoneNumber: "",
+          phoneNumber: fetchedAccount.phoneNumber,
         };
 
         //Validations
@@ -86,16 +101,9 @@ const Profilepage: NextPageWithLayout = function () {
               height={100}
             />
             <div className="ml-4">
-              {isLoading && (
-                <h2 className="font-bold text-4xl">
-                  <Spinner />
-                </h2>
-              )}
+              {isLoading && <Spinner />}
               {!isLoading && (
-                <>
-                  <h2 className="font-bold text-4xl">{userAccountName}</h2>
-                  <p>Santo Domingo, DR</p>
-                </>
+                <h2 className="font-bold text-4xl">{userFullName}</h2>
               )}
             </div>
           </div>
@@ -103,11 +111,13 @@ const Profilepage: NextPageWithLayout = function () {
         <section>
           <Resume />
           <ContactInformation
-            firstName={account.firstName}
-            lastName={account.lastName}
+            firstName={userFirstName}
+            lastName={userLastName}
             email={account.email}
-            phoneNumber={account.phoneNumber}
-            onSave={saveInformationHandler}
+            phoneNumber={userPhoneNumber}
+            previewMode={previewMode}
+            onTogglePreview={togglePreviewHandler}
+            onSave={saveInfoHandler}
           />
 
           <section className="border border-gray-300 rounded-md p-3">

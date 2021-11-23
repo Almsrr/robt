@@ -1,13 +1,19 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getAccount, getUser } from "./db-functions";
+import {
+  getAccount,
+  getUser,
+  updateUserFirstAndLastName,
+} from "./db-functions";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  //Global scope variable
+  const accountId = req.query.accountId.toString();
+
   switch (req.method) {
     case "GET":
-      const accountId = req.query.accountId.toString();
       const account = await getAccount(accountId);
       const user = await getUser(accountId);
       // console.log(accountId);
@@ -20,12 +26,20 @@ export default async function handler(
       break;
 
     case "POST":
-      const userId = req.query.accountId.toString();
-      const info = req.body;
+      const { firstName, lastName } = req.body;
+      // console.log(firstName, lastName, accountId);
 
-      console.log(userId);
-      console.log(info);
-      res.status(200).send("");
+      const updateSuccessfully = await updateUserFirstAndLastName(
+        firstName,
+        lastName,
+        accountId
+      );
+
+      if (updateSuccessfully) {
+        res.status(200).send("");
+      } else {
+        res.status(502).send("");
+      }
       break;
 
     default:

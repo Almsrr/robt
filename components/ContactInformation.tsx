@@ -1,22 +1,28 @@
-import { FC, useRef, useState } from "react";
+import { FC, useRef } from "react";
 
 interface User {
-  firstName: string | null;
-  lastName: string | null;
+  firstName: string;
+  lastName: string;
   email: string;
   phoneNumber: string;
+  previewMode: boolean;
+  onTogglePreview(): void;
   onSave(firstName: string, lastName: string): void;
 }
 
 const ContactInformation: FC<User> = function (props) {
-  const [previewMode, setPreviewMode] = useState<boolean>(true);
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
 
-  const hasPhoneNumber = props.phoneNumber.length !== 0 ? true : false;
+  let hasFullName = false;
+  let hasPhoneNumber = false;
 
-  const userFirstName = props.firstName ? props.firstName : "";
-  const userLastName = props.lastName ? props.lastName : "";
+  if (props.firstName.length !== 0 && props.lastName.length !== 0) {
+    hasFullName = true;
+  }
+  if (props.phoneNumber.length !== 0) {
+    hasPhoneNumber = true;
+  }
 
   const saveInfoHandler = () => {
     const firstName = firstNameRef.current!.value;
@@ -28,14 +34,20 @@ const ContactInformation: FC<User> = function (props) {
     props.onSave(firstName, lastName);
   };
 
-  const togglePreviewMode = () => {
-    setPreviewMode((prevState) => !prevState);
-  };
-
   const preview = (
     <div className="pb-5 text-gray-500">
+      {hasFullName && (
+        <p className="text-sm mb-1">{`${props.firstName} ${props.lastName}`}</p>
+      )}
       <p className="text-sm mb-1">{props.email}</p>
-      {!hasPhoneNumber && <p className="text-sm font-bold">Add phone number</p>}
+      {!hasPhoneNumber && (
+        <button
+          className="text-sm font-bold"
+          onClick={() => props.onTogglePreview()}
+        >
+          Add phone number
+        </button>
+      )}
       {hasPhoneNumber && <p className="text-sm">{props.phoneNumber}</p>}
     </div>
   );
@@ -55,7 +67,7 @@ const ContactInformation: FC<User> = function (props) {
               type="text"
               id="first-name"
               className="border-2 border-black rounded-lg block w-full p-2"
-              defaultValue={userFirstName}
+              defaultValue={props.firstName}
               ref={firstNameRef}
             />
           </div>
@@ -69,7 +81,7 @@ const ContactInformation: FC<User> = function (props) {
               type="text"
               id="last-name"
               className="border-2 border-black rounded-lg block w-full p-2"
-              defaultValue={userLastName}
+              defaultValue={props.lastName}
               ref={lastNameRef}
             />
           </div>
@@ -116,7 +128,10 @@ const ContactInformation: FC<User> = function (props) {
           >
             Save
           </button>
-          <button className="font-bold p-3" onClick={togglePreviewMode}>
+          <button
+            className="font-bold p-3"
+            onClick={() => props.onTogglePreview()}
+          >
             Cancel
           </button>
         </div>
@@ -129,19 +144,19 @@ const ContactInformation: FC<User> = function (props) {
       <header>
         <div className="flex justify-between mb-4">
           <h2 className="font-bold text-lg">Contact information</h2>
-          {previewMode && (
+          {props.previewMode && (
             <button
               type="button"
               className="px-2 text-md"
-              onClick={togglePreviewMode}
+              onClick={() => props.onTogglePreview()}
             >
               <i className="fas fa-edit"></i>
             </button>
           )}
         </div>
       </header>
-      {previewMode && preview}
-      {!previewMode && contactInformationForm}
+      {props.previewMode && preview}
+      {!props.previewMode && contactInformationForm}
     </section>
   );
 };

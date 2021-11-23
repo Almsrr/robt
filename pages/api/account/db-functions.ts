@@ -37,6 +37,7 @@ export const getAccount = (accountId: string) => {
 
         con.query(accountQuery, (error, results) => {
           if (error) throw new Error(error.message);
+          con.release();
 
           const rows = <RowDataPacket[]>results;
           // console.log(rows);
@@ -63,7 +64,7 @@ export const getAccount = (accountId: string) => {
 
 export const getUser = (accountId: string) => {
   const userQuery = mysql.format(
-    "SELECT user_id, first_name, last_name FROM User WHERE account=?",
+    "SELECT user_id, first_name, last_name, phone_number FROM User WHERE account=?",
     [accountId]
   );
 
@@ -74,6 +75,7 @@ export const getUser = (accountId: string) => {
 
         con.query(userQuery, (error, results) => {
           if (error) throw new Error(error.message);
+          con.release();
 
           const rows = <RowDataPacket[]>results;
           // console.log(rows);
@@ -83,6 +85,7 @@ export const getUser = (accountId: string) => {
               userId: rows[0].user_id,
               firstName: rows[0].first_name,
               lastName: rows[0].last_name,
+              phoneNumber: rows[0].phone_number,
             };
             resolve(user);
           } else {
@@ -93,6 +96,42 @@ export const getUser = (accountId: string) => {
     } catch (error: any) {
       console.log(error.message);
       resolve(null);
+    }
+  });
+};
+
+export const updateUserFirstAndLastName = (
+  firstName: string,
+  lastName: string,
+  accountId: string
+) => {
+  const updateUserQuery = mysql.format(
+    "UPDATE User SET first_name=?, last_name=? WHERE account=?",
+    [firstName, lastName, accountId]
+  );
+
+  return new Promise<boolean>((resolve) => {
+    try {
+      pool.getConnection((error, con) => {
+        if (error) throw new Error(error.message);
+
+        con.query(updateUserQuery, (error, results) => {
+          if (error) throw new Error(error.message);
+          con.release();
+
+          const dbResults = <OkPacket>results;
+          // console.log(dbResults);
+
+          if (dbResults.affectedRows > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+      });
+    } catch (error: any) {
+      console.log(error.message);
+      resolve(false);
     }
   });
 };
@@ -110,6 +149,7 @@ export const alreadyExists = (table: string, field: string, value: string) => {
         if (error) throw new Error(error.message);
         con.query(selectQuery, (error, results) => {
           if (error) throw new Error(error.message);
+          con.release();
 
           //cast to an array
           const rows = <RowDataPacket[]>results;
@@ -144,6 +184,7 @@ export const createNewUser = async (newUser: User) => {
         //execute query
         con.query(userQuery, (error, results) => {
           if (error) throw new Error(error.message);
+          con.release();
 
           resolve(true);
         });
@@ -176,6 +217,7 @@ export const createNewAccount = async (newAccount: Account) => {
             //execute query
             con.query(accountQuery, (error, results) => {
               if (error) throw new Error(error.message);
+              con.release();
 
               // console.log(results);
               resolve({
@@ -215,6 +257,7 @@ export const getAccountPassword = (field: string, value: string) => {
 
         con.query(selectQuery, (error, results) => {
           if (error) throw new Error(error.message);
+          con.release();
 
           const rows = <RowDataPacket[]>results;
 
@@ -245,6 +288,7 @@ export const getAccountId = (field: string, value: string) => {
 
         con.query(selectQuery, (error, results) => {
           if (error) throw new Error(error.message);
+          con.release();
 
           const rows = <RowDataPacket[]>results;
 
