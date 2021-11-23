@@ -1,8 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import {
   getAccount,
+  getAccountPassword,
   getUser,
   updateUserFirstAndLastName,
+  updateAccountEmail,
 } from "./db-functions";
 
 export default async function handler(
@@ -13,7 +15,7 @@ export default async function handler(
   const accountId = req.query.accountId.toString();
 
   switch (req.method) {
-    case "GET":
+    case "GET": {
       const account = await getAccount(accountId);
       const user = await getUser(accountId);
       // console.log(accountId);
@@ -24,8 +26,9 @@ export default async function handler(
         res.status(400).send("ACCOUNT NOT FOUND");
       }
       break;
+    }
 
-    case "POST":
+    case "POST": {
       const { firstName, lastName } = req.body;
       // console.log(firstName, lastName, accountId);
 
@@ -41,6 +44,23 @@ export default async function handler(
         res.status(502).send("");
       }
       break;
+    }
+    case "PUT": {
+      const { newEmail, password } = req.body;
+      const account = await getAccount(accountId);
+
+      const storedPassword = await getAccountPassword("email", account!.email);
+      console.log(storedPassword);
+
+      if (storedPassword === password) {
+        await updateAccountEmail(accountId, newEmail);
+        res.status(200).send("");
+      } else {
+        res.status(406).send("INCORRECT PASSWORD");
+      }
+
+      break;
+    }
 
     default:
       res.status(501);

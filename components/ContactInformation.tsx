@@ -1,9 +1,13 @@
+import Link from "next/link";
+
 import { FC, useRef } from "react";
 
 interface User {
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
+  role: string;
   phoneNumber: string;
   previewMode: boolean;
   onTogglePreview(): void;
@@ -33,6 +37,9 @@ const ContactInformation: FC<User> = function (props) {
 
     props.onSave(firstName, lastName);
   };
+
+  const editEmailUrl = `/account/change-email?accountId=${props.id}&email=${props.email}&role=${props.role}`;
+  // const editPhoneNumberUrl = `/account/change-phone-number?account=${props.id}`;
 
   const preview = (
     <div className="pb-5 text-gray-500">
@@ -97,7 +104,9 @@ const ContactInformation: FC<User> = function (props) {
         </label>
         <p className="font-bold">
           {props.email}{" "}
-          <button className="text-blue-600 text-xs mx-2">edit</button>
+          <Link href={editEmailUrl}>
+            <a className="text-blue-600 text-xs mx-2">edit</a>
+          </Link>
         </p>
       </div>
       <div className="pb-4">

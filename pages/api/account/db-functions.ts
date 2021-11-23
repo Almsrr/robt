@@ -306,3 +306,32 @@ export const getAccountId = (field: string, value: string) => {
     }
   });
 };
+
+export const updateAccountEmail = (accountId: string, newEmail: string) => {
+  const updateEmailQuery = mysql.format(
+    "UPDATE Account SET email=? WHERE account_id=?",
+    [newEmail, accountId]
+  );
+
+  return new Promise((resolve) => {
+    try {
+      pool.getConnection((error, con) => {
+        if (error) throw new Error(error.message);
+
+        con.query(updateEmailQuery, (error, results) => {
+          if (error) throw new Error(error.message);
+
+          const dbResult = <OkPacket>results;
+          if (dbResult.affectedRows > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+      });
+    } catch (error: any) {
+      console.log(error.message);
+      resolve(false);
+    }
+  });
+};

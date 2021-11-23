@@ -111,9 +111,11 @@ const Profilepage: NextPageWithLayout = function () {
         <section>
           <Resume />
           <ContactInformation
+            id={account.id}
             firstName={userFirstName}
             lastName={userLastName}
             email={account.email}
+            role={account.role}
             phoneNumber={userPhoneNumber}
             previewMode={previewMode}
             onTogglePreview={togglePreviewHandler}
