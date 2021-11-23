@@ -19,7 +19,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "pages/job-seeker/[username]"
+    "pages/job-seeker/[accountId]"
   ],
   "exclude": ["node_modules"]
 }
