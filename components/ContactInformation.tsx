@@ -1,4 +1,4 @@
-import { FC, useRef } from "react";
+import { FC, useRef, useState } from "react";
 
 interface User {
   firstName: string | null;
@@ -9,6 +9,7 @@ interface User {
 }
 
 const ContactInformation: FC<User> = function (props) {
+  const [previewMode, setPreviewMode] = useState<boolean>(true);
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
 
@@ -27,9 +28,20 @@ const ContactInformation: FC<User> = function (props) {
     props.onSave(firstName, lastName);
   };
 
-  return (
-    <section className="border border-gray-300 rounded-md mb-4 p-3">
-      <h2 className="font-bold text-lg mb-5">Contact information</h2>
+  const togglePreviewMode = () => {
+    setPreviewMode((prevState) => !prevState);
+  };
+
+  const preview = (
+    <div className="pb-5 text-gray-500">
+      <p className="text-sm mb-1">{props.email}</p>
+      {!hasPhoneNumber && <p className="text-sm font-bold">Add phone number</p>}
+      {hasPhoneNumber && <p className="text-sm">{props.phoneNumber}</p>}
+    </div>
+  );
+
+  const contactInformationForm = (
+    <>
       <form>
         <p className="text-gray-500 mb-4">
           <span className="text-red-600">*</span> Required fields
@@ -104,9 +116,32 @@ const ContactInformation: FC<User> = function (props) {
           >
             Save
           </button>
-          <button className="font-bold p-3">Cancel</button>
+          <button className="font-bold p-3" onClick={togglePreviewMode}>
+            Cancel
+          </button>
         </div>
       </div>
+    </>
+  );
+
+  return (
+    <section className="border border-gray-300 rounded-md mb-4 p-3">
+      <header>
+        <div className="flex justify-between mb-4">
+          <h2 className="font-bold text-lg">Contact information</h2>
+          {previewMode && (
+            <button
+              type="button"
+              className="px-2 text-md"
+              onClick={togglePreviewMode}
+            >
+              <i className="fas fa-edit"></i>
+            </button>
+          )}
+        </div>
+      </header>
+      {previewMode && preview}
+      {!previewMode && contactInformationForm}
     </section>
   );
 };

@@ -111,13 +111,20 @@ const Profilepage: NextPageWithLayout = function () {
           />
 
           <section className="border border-gray-300 rounded-md p-3">
-            <h2 className="font-bold text-lg">Jobs preferences</h2>
-            <p className="text-sm">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae
-              consequuntur ducimus facere illum et aspernatur, perferendis
-              doloremque, quaerat eos inventore mollitia dolore pariatur omnis
-              dolores tempora? Nam maiores minus ab.
-            </p>
+            <header>
+              <div className="flex justify-between mb-4">
+                <h2 className="font-bold text-lg">Jobs preferences</h2>
+                <button type="button" className="px-2 text-md">
+                  <i className="fas fa-edit"></i>
+                </button>
+              </div>
+            </header>
+            <div className="pb-5 text-gray-500">
+              <p className="text-sm">
+                Save specific details like desired pay and schedule that help us
+                match you with better jobs
+              </p>
+            </div>
           </section>
         </section>
       </main>
