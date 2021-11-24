@@ -49,16 +49,12 @@ export default async function handler(
       const { newEmail, password } = req.body;
       const account = await getAccountBy("id", accountId);
 
-      const storedPassword = await getAccountPassword("email", account!.email);
-      console.log(storedPassword);
-
-      if (storedPassword === password) {
+      if (account?.password === password) {
         await updateAccountEmail(accountId, newEmail);
-        res.status(200).send("");
+        res.status(200).send("EMAIL UPDATED SUCCESSFULLY");
       } else {
         res.status(406).send("INCORRECT PASSWORD");
       }
-
       break;
     }
     default: {

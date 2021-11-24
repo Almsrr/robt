@@ -321,7 +321,7 @@ export const getAccountId = (field: string, value: string) => {
 
 export const updateAccountEmail = (accountId: string, newEmail: string) => {
   const updateEmailQuery = mysql.format(
-    "UPDATE Account SET email=? WHERE account_id=?",
+    "UPDATE Account SET email=? WHERE id=?",
     [newEmail, accountId]
   );
 
@@ -334,7 +334,7 @@ export const updateAccountEmail = (accountId: string, newEmail: string) => {
           if (error) throw new Error(error.message);
 
           const dbResult = <OkPacket>results;
-          if (dbResult.affectedRows > 0) {
+          if (dbResult.affectedRows === 1) {
             resolve(true);
           } else {
             resolve(false);
