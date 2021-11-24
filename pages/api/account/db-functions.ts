@@ -115,7 +115,7 @@ export const setUserNames = (
   accountId: string
 ) => {
   const updateUserNamesQuery = mysql.format(
-    "UPDATE User SET first_name=?, last_name=? WHERE account=?",
+    "UPDATE User SET first_name=?, last_name=? WHERE account_id=?",
     [firstName, lastName, accountId]
   );
 

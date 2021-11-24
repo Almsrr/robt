@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import {
   getAccountBy,
   getUserBy,
-  updateUserFirstAndLastName,
+  setUserNames,
   updateAccountEmail,
 } from "./db-functions";
 
@@ -34,16 +34,12 @@ export default async function handler(
     }
     case "POST": {
       const { firstName, lastName } = req.body;
-      // console.log(firstName, lastName, accountId);
+      // console.log(firstName, lastName);
 
-      const updateSuccessfully = await updateUserFirstAndLastName(
-        firstName,
-        lastName,
-        accountId
-      );
+      const namesUpdated = await setUserNames(firstName, lastName, accountId);
 
-      if (updateSuccessfully) {
-        res.status(200).send("");
+      if (namesUpdated) {
+        res.status(200).send("NAMES UPDATED SUCCESSFULLY");
       } else {
         res.status(502).send("");
       }
