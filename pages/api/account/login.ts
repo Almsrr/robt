@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getAccount, getAccountId, getAccountPassword } from "./db-functions";
+import { getAccountBy } from "./db-functions";
 
 interface LoginReponse {
-  token: string | null;
   success: boolean;
+  token: string | null;
   id: string | null;
   role: string | null;
 }
@@ -13,21 +13,21 @@ export default async function handler(
   res: NextApiResponse<LoginReponse>
 ) {
   if (req.method === "POST") {
-    const email = req.body.email;
-    const password = req.body.password;
-    const storedPassword = await getAccountPassword("email", email);
+    const { email, password } = req.body;
+    const storedAccount = await getAccountBy("email", email);
 
-    if (password === storedPassword) {
-      const id = await getAccountId("email", email);
-      const account = await getAccount(id);
-
-      res
-        .status(200)
-        .json({ token: "123", success: true, id, role: account!.role });
+    let response: LoginReponse;
+    if (password === storedAccount?.password) {
+      response = {
+        token: "123",
+        success: true,
+        id: storedAccount!.accountId,
+        role: storedAccount!.role,
+      };
+      res.status(200).json(response);
     } else {
-      res
-        .status(200)
-        .json({ token: null, success: false, id: null, role: null });
+      response = { token: null, success: false, id: null, role: null };
+      res.status(406).json(response);
     }
   }
 }
