@@ -21,7 +21,7 @@ export default async function handler(
       response = {
         token: "123",
         success: true,
-        id: storedAccount!.accountId,
+        id: storedAccount!.id,
         role: storedAccount!.role,
       };
       res.status(200).json(response);

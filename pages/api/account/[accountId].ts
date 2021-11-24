@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import {
-  getAccount,
-  getAccountPassword,
-  getUser,
+  getAccountBy,
+  getUserBy,
   updateUserFirstAndLastName,
   updateAccountEmail,
 } from "./db-functions";
@@ -11,23 +10,28 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  //Global scope variable
+  //Global variable
   const accountId = req.query.accountId.toString();
 
   switch (req.method) {
     case "GET": {
-      const account = await getAccount(accountId);
-      const user = await getUser(accountId);
-      // console.log(accountId);
+      const account = await getAccountBy("id", accountId);
+      const user = await getUserBy("account_id", accountId);
+      console.log(account, user);
 
+      let accountInfo = {};
       if (account && user) {
+        for (const key in account) {
+          if (key === "password") continue;
+          accountInfo = { ...accountInfo, key };
+        }
+
         res.status(200).json({ ...account, ...user });
       } else {
         res.status(400).send("ACCOUNT NOT FOUND");
       }
       break;
     }
-
     case "POST": {
       const { firstName, lastName } = req.body;
       // console.log(firstName, lastName, accountId);
@@ -47,7 +51,7 @@ export default async function handler(
     }
     case "PUT": {
       const { newEmail, password } = req.body;
-      const account = await getAccount(accountId);
+      const account = await getAccountBy("id", accountId);
 
       const storedPassword = await getAccountPassword("email", account!.email);
       console.log(storedPassword);
@@ -61,9 +65,8 @@ export default async function handler(
 
       break;
     }
-
-    default:
+    default: {
       res.status(501);
-      break;
+    }
   }
 }

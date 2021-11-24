@@ -18,17 +18,18 @@ interface dbResult {
 }
 
 interface accountData {
-  accountId: string;
+  id: string;
   email: string;
   password: string;
   role: string;
   status: number;
 }
 
-interface userInfo {
-  userId: string;
+interface userData {
+  id: string;
   firstName: string;
   lastName: string;
+  phoneNumber: string;
 }
 
 export const getAccountBy = (field: string, value: string) => {
@@ -51,7 +52,7 @@ export const getAccountBy = (field: string, value: string) => {
 
           if (rows.length > 0) {
             const account = {
-              accountId: rows[0].account_id,
+              id: rows[0].id,
               email: rows[0].email,
               password: rows[0].password,
               role: rows[0].role,
@@ -70,13 +71,13 @@ export const getAccountBy = (field: string, value: string) => {
   });
 };
 
-export const getUser = (accountId: string) => {
-  const userQuery = mysql.format(
-    "SELECT user_id, first_name, last_name, phone_number FROM User WHERE account=?",
-    [accountId]
-  );
+export const getUserBy = (field: string, value: string) => {
+  const userQuery = mysql.format("SELECT * FROM User WHERE ??=?", [
+    field,
+    value,
+  ]);
 
-  return new Promise<userInfo | null>((resolve) => {
+  return new Promise<userData | null>((resolve) => {
     try {
       pool.getConnection((error, con) => {
         if (error) throw new Error(error.message);
@@ -90,7 +91,7 @@ export const getUser = (accountId: string) => {
 
           if (rows.length > 0) {
             const user = {
-              userId: rows[0].user_id,
+              id: rows[0].id,
               firstName: rows[0].first_name,
               lastName: rows[0].last_name,
               phoneNumber: rows[0].phone_number,
@@ -108,12 +109,12 @@ export const getUser = (accountId: string) => {
   });
 };
 
-export const updateUserFirstAndLastName = (
+export const setUserNames = (
   firstName: string,
   lastName: string,
   accountId: string
 ) => {
-  const updateUserQuery = mysql.format(
+  const updateUserNamesQuery = mysql.format(
     "UPDATE User SET first_name=?, last_name=? WHERE account=?",
     [firstName, lastName, accountId]
   );
@@ -123,13 +124,11 @@ export const updateUserFirstAndLastName = (
       pool.getConnection((error, con) => {
         if (error) throw new Error(error.message);
 
-        con.query(updateUserQuery, (error, results) => {
+        con.query(updateUserNamesQuery, (error, results) => {
           if (error) throw new Error(error.message);
           con.release();
 
           const dbResults = <OkPacket>results;
-          // console.log(dbResults);
-
           if (dbResults.affectedRows > 0) {
             resolve(true);
           } else {
@@ -180,8 +179,8 @@ export const alreadyExists = (table: string, field: string, value: string) => {
 export const createNewUser = async (newUser: User) => {
   const { id, accountId } = newUser;
 
-  const userQuery = mysql.format(
-    "INSERT INTO User (user_id, account) VALUES (?, ?)",
+  const newUserQuery = mysql.format(
+    "INSERT INTO User (id, account_id) VALUES (?, ?)",
     [id, accountId]
   );
 
@@ -190,7 +189,7 @@ export const createNewUser = async (newUser: User) => {
       pool.getConnection((error, con) => {
         if (error) throw new Error(error.message);
 
-        con.query(userQuery, (error, results) => {
+        con.query(newUserQuery, (error, results) => {
           if (error) throw new Error(error.message);
           con.release();
 
@@ -213,7 +212,7 @@ export const createNewAccount = async (newAccount: Account) => {
   const { id, email, password, role, status } = newAccount;
 
   const newAccountQuery = mysql.format(
-    "INSERT INTO Account (account_id, email, password, role, status) VALUES (?, ?, ?, ?, ?)",
+    "INSERT INTO Account (id, email, password, role, status) VALUES (?, ?, ?, ?, ?)",
     [id, email, password, role, status]
   );
 
