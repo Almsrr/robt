@@ -2,7 +2,7 @@ export default class User {
   id: string;
   firstName?: string;
   lastName?: string;
-  account: string;
+  accountId: string;
 
   constructor(
     id: string,
@@ -13,6 +13,6 @@ export default class User {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.account = account;
+    this.accountId = account;
   }
 }

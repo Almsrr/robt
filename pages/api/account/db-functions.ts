@@ -11,9 +11,16 @@ const pool = mysql.createPool({
   debug: false,
 });
 
-interface accountInfo {
+interface dbResult {
+  success: boolean;
+  error: boolean;
+  data: any;
+}
+
+interface accountData {
   accountId: string;
   email: string;
+  password: string;
   role: string;
   status: number;
 }
@@ -24,13 +31,13 @@ interface userInfo {
   lastName: string;
 }
 
-export const getAccount = (accountId: string) => {
-  const accountQuery = mysql.format(
-    "SELECT account_id, email, role, status FROM Account WHERE account_id=?",
-    [accountId]
-  );
+export const getAccountBy = (field: string, value: string) => {
+  const accountQuery = mysql.format("SELECT * FROM Account WHERE ??=?", [
+    field,
+    value,
+  ]);
 
-  return new Promise<accountInfo | null>((resolve) => {
+  return new Promise<accountData | null>((resolve) => {
     try {
       pool.getConnection((error, con) => {
         if (error) throw new Error(error.message);
@@ -46,6 +53,7 @@ export const getAccount = (accountId: string) => {
             const account = {
               accountId: rows[0].account_id,
               email: rows[0].email,
+              password: rows[0].password,
               role: rows[0].role,
               status: rows[0].status,
             };
@@ -153,6 +161,7 @@ export const alreadyExists = (table: string, field: string, value: string) => {
 
           //cast to an array
           const rows = <RowDataPacket[]>results;
+          // console.log(rows);
 
           if (rows.length > 0) {
             resolve(true);
@@ -169,11 +178,11 @@ export const alreadyExists = (table: string, field: string, value: string) => {
 };
 
 export const createNewUser = async (newUser: User) => {
-  const { id, account } = newUser;
+  const { id, accountId } = newUser;
 
   const userQuery = mysql.format(
     "INSERT INTO User (user_id, account) VALUES (?, ?)",
-    [id, account]
+    [id, accountId]
   );
 
   return new Promise<boolean>((resolve) => {
@@ -181,12 +190,16 @@ export const createNewUser = async (newUser: User) => {
       pool.getConnection((error, con) => {
         if (error) throw new Error(error.message);
 
-        //execute query
         con.query(userQuery, (error, results) => {
           if (error) throw new Error(error.message);
           con.release();
 
-          resolve(true);
+          const dbReponse = <OkPacket>results;
+          if (dbReponse.affectedRows === 1) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
         });
       });
     } catch (error: any) {
@@ -199,50 +212,50 @@ export const createNewUser = async (newUser: User) => {
 export const createNewAccount = async (newAccount: Account) => {
   const { id, email, password, role, status } = newAccount;
 
-  const accountQuery = mysql.format(
+  const newAccountQuery = mysql.format(
     "INSERT INTO Account (account_id, email, password, role, status) VALUES (?, ?, ?, ?, ?)",
     [id, email, password, role, status]
   );
 
-  return new Promise<{ success: boolean; error: boolean; data: any }>(
-    async (resolve) => {
-      const accountExists = await alreadyExists("Account", "email", email);
+  return new Promise<dbResult>(async (resolve) => {
+    const accountExists = await alreadyExists("Account", "email", email);
 
-      if (!accountExists) {
-        //if account email doesn't exist
-        try {
-          pool.getConnection((error, con) => {
+    if (!accountExists) {
+      //if account email doesn't exist
+      try {
+        pool.getConnection((error, con) => {
+          if (error) throw new Error(error.message);
+
+          //execute query
+          con.query(newAccountQuery, (error, results) => {
             if (error) throw new Error(error.message);
+            con.release();
 
-            //execute query
-            con.query(accountQuery, (error, results) => {
-              if (error) throw new Error(error.message);
-              con.release();
-
-              // console.log(results);
+            const dbResponse = <OkPacket>results;
+            if (dbResponse.affectedRows === 1) {
               resolve({
                 success: true,
                 error: false,
                 data: null,
               });
-            });
+            }
           });
-        } catch (error: any) {
-          resolve({
-            success: false,
-            error: true,
-            data: null,
-          });
-        }
-      } else {
+        });
+      } catch (error: any) {
         resolve({
           success: false,
-          error: false,
+          error: true,
           data: null,
         });
       }
+    } else {
+      resolve({
+        success: false,
+        error: false,
+        data: "ACCOUNT ALREADY EXISTS",
+      });
     }
-  );
+  });
 };
 
 export const getAccountPassword = (field: string, value: string) => {

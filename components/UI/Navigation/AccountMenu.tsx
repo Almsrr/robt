@@ -11,14 +11,14 @@ import { removeLocaleAccount } from "../../../app/locale-functions";
 const AccountMenu: FC<{ onCloseMenu: () => void }> = function (props) {
   const dispatch = useAppDispatch();
   const { id, role } = useAppSelector((state) => state.account);
-  // const router = useRouter();
+  const router = useRouter();
 
   const logoutHandler = () => {
     dispatch(logout());
     dispatch(clearAccount());
     removeLocaleAccount();
 
-    // router.push("/");
+    router.push("/jobs");
   };
 
   return (
