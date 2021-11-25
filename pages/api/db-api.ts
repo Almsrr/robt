@@ -128,8 +128,9 @@ export const setUserNames = (
           if (error) throw new Error(error.message);
           con.release();
 
-          const dbResults = <OkPacket>results;
-          if (dbResults.affectedRows > 0) {
+          const dbResult = <OkPacket>results;
+          // console.log(dbResult);
+          if (dbResult.affectedRows === 1) {
             resolve(true);
           } else {
             resolve(false);
@@ -301,7 +302,7 @@ export const updateUserPhone = (newPhoneNumber: string, accountId: string) => {
           if (error) throw new Error(error.message);
 
           const dbResponse = <OkPacket>results;
-          console.log(dbResponse);
+          // console.log(dbResponse);
           if (dbResponse.affectedRows === 1) {
             resolve(true);
           } else {

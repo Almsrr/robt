@@ -12,16 +12,20 @@ export default async function handler(
     case "GET": {
       const account = await getAccountBy("id", accountId);
       const user = await getUserBy("account_id", accountId);
-      console.log(account, user);
+      // console.log(account, user);
 
-      let accountInfo = {};
       if (account && user) {
-        for (const key in account) {
-          if (key === "password") continue;
-          accountInfo = { ...accountInfo, key };
-        }
+        const accountInfo = {
+          id: account.id,
+          email: account.email,
+          role: account.role,
+          status: account.status,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phoneNumber: user.phoneNumber,
+        };
 
-        res.status(200).json({ ...account, ...user });
+        res.status(200).json(accountInfo);
       } else {
         res.status(400).send("ACCOUNT NOT FOUND");
       }
@@ -33,9 +37,9 @@ export default async function handler(
 
       if (account?.password === password) {
         await updateAccountEmail(accountId, newEmail);
-        res.status(200).send("EMAIL UPDATED SUCCESSFULLY");
+        res.status(200).json({ ok: true, info: null });
       } else {
-        res.status(406).send("INCORRECT PASSWORD");
+        res.status(200).json({ ok: false, info: "SOMETHING WENT WRONG" });
       }
       break;
     }

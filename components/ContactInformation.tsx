@@ -155,6 +155,7 @@ const ContactInformation: FC<User> = function (props) {
           <h2 className="font-bold text-lg">Contact information</h2>
           {props.previewMode && (
             <button
+              title="edit"
               type="button"
               className="px-2 text-md"
               onClick={() => props.onTogglePreview()}

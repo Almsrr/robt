@@ -6,6 +6,7 @@ interface LoginReponse {
   token: string | null;
   id: string | null;
   role: string | null;
+  info: string;
 }
 
 export default async function handler(
@@ -23,11 +24,18 @@ export default async function handler(
         success: true,
         id: storedAccount!.id,
         role: storedAccount!.role,
+        info: "USER LOGGED SUCCESSFULLY",
       };
       res.status(200).json(response);
     } else {
-      response = { token: null, success: false, id: null, role: null };
-      res.status(406).json(response);
+      response = {
+        token: null,
+        success: false,
+        id: null,
+        role: null,
+        info: "VERIFY EMAIL AND PASSWORD",
+      };
+      res.status(200).json(response);
     }
   }
 }

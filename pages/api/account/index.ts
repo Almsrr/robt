@@ -31,10 +31,10 @@ export default async function handler(
       }
 
       if (accountCreation.success && !accountCreation.error && userWasCreated) {
-        const response = { id: newAccount.id, token: "123" };
+        const response = { id: newAccount.id, token: "123", ok: true };
         res.status(200).json(response);
       } else if (!accountCreation.success && !accountCreation.error) {
-        res.status(406).send(accountCreation.data);
+        res.status(200).json({ ok: false, info: accountCreation.data });
       } else {
         res.status(502);
       }

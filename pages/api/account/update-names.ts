@@ -7,14 +7,14 @@ export default async function handler(
 ) {
   if (req.method === "PUT") {
     const { firstName, lastName, accountId } = req.body;
-    // console.log(firstName, lastName);
+    console.log(firstName, lastName, accountId);
 
     const namesUpdated = await setUserNames(firstName, lastName, accountId);
 
     if (namesUpdated) {
-      res.status(200).json({ success: true });
+      res.status(200).json({ ok: true });
     } else {
-      res.status(502).send("");
+      res.status(200).send({ ok: false, info: "TRY AGAIN" });
     }
   }
 }
