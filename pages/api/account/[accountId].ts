@@ -1,69 +1,50 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import {
-  getAccount,
-  getAccountPassword,
-  getUser,
-  updateUserFirstAndLastName,
-  updateAccountEmail,
-} from "./db-functions";
+import { getAccountBy, getUserBy, updateAccountEmail } from "../db-api";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  //Global scope variable
+  //Global variable
   const accountId = req.query.accountId.toString();
 
   switch (req.method) {
     case "GET": {
-      const account = await getAccount(accountId);
-      const user = await getUser(accountId);
-      // console.log(accountId);
+      const account = await getAccountBy("id", accountId);
+      const user = await getUserBy("account_id", accountId);
+      // console.log(account, user);
 
       if (account && user) {
-        res.status(200).json({ ...account, ...user });
+        const accountInfo = {
+          id: account.id,
+          email: account.email,
+          role: account.role,
+          status: account.status,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phoneNumber: user.phoneNumber,
+        };
+
+        res.status(200).json(accountInfo);
       } else {
         res.status(400).send("ACCOUNT NOT FOUND");
       }
       break;
     }
-
-    case "POST": {
-      const { firstName, lastName } = req.body;
-      // console.log(firstName, lastName, accountId);
-
-      const updateSuccessfully = await updateUserFirstAndLastName(
-        firstName,
-        lastName,
-        accountId
-      );
-
-      if (updateSuccessfully) {
-        res.status(200).send("");
-      } else {
-        res.status(502).send("");
-      }
-      break;
-    }
     case "PUT": {
       const { newEmail, password } = req.body;
-      const account = await getAccount(accountId);
+      const account = await getAccountBy("id", accountId);
 
-      const storedPassword = await getAccountPassword("email", account!.email);
-      console.log(storedPassword);
-
-      if (storedPassword === password) {
+      if (account?.password === password) {
         await updateAccountEmail(accountId, newEmail);
-        res.status(200).send("");
+        res.status(200).json({ ok: true, info: null });
       } else {
-        res.status(406).send("INCORRECT PASSWORD");
+        res.status(200).json({ ok: false, info: "SOMETHING WENT WRONG" });
       }
-
       break;
     }
-
-    default:
+    default: {
       res.status(501);
-      break;
+    }
   }
 }

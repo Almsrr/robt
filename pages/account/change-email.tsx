@@ -26,11 +26,15 @@ const ChangeEmailPage: NextPageWithLayout = function () {
     axios
       .put(url, { newEmail, password })
       .then((response) => {
-        goToProfile();
-        alert("Email updated successfully");
+        if (response.data.ok) {
+          alert("Email updated successfully");
+          goToProfile();
+        } else {
+          alert(response.data.info);
+        }
       })
-      .catch((error) => {
-        console.log("Something went wrong");
+      .catch((error: any) => {
+        console.log(error.message);
       });
   };
 

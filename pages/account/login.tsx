@@ -22,6 +22,7 @@ const LoginPage: NextPageWithLayout = function () {
           token,
           id: accountId,
           role: accountRole,
+          info,
         } = response.data;
 
         if (success) {
@@ -30,10 +31,12 @@ const LoginPage: NextPageWithLayout = function () {
           saveAccountLocally({ token, accountId, accountRole });
 
           router.replace(`/${accountRole}/${accountId}/dashboard`);
+        } else {
+          alert(info);
         }
       })
-      .catch(() => {
-        alert("Something went wrong, please try again");
+      .catch((error: any) => {
+        console.log(error.message);
       });
   };
 

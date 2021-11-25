@@ -50,14 +50,28 @@ const Profilepage: NextPageWithLayout = function () {
 
   const saveInfoHandler = (firstName: string, lastName: string) => {
     setIsLoading(true);
-    const url = `/api/account/${account.id}`;
+    axios
+      .put("/api/account/update-names", {
+        accountId: account.id,
+        firstName,
+        lastName,
+      })
+      .then((response) => {
+        if (response.data.ok) {
+          alert("Information updated successfully!");
 
-    axios.post(url, { firstName, lastName }).then((response) => {
-      alert("Information updated successfully!");
-      setAccount({ ...account, firstName, lastName });
-      setPreviewMode(true);
-      setIsLoading(false);
-    });
+          setPreviewMode(true);
+          setAccount({ ...account, firstName, lastName });
+        } else {
+          alert(response.data.info);
+        }
+      })
+      .catch((error) => {
+        console.log(error.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -71,7 +85,7 @@ const Profilepage: NextPageWithLayout = function () {
         // console.log(response.data);
 
         const currentAccount: AccountInfo = {
-          id: fetchedAccount.accountId,
+          id: fetchedAccount.id,
           email: fetchedAccount.email,
           role: fetchedAccount.role,
           firstName: fetchedAccount.firstName,
@@ -79,13 +93,14 @@ const Profilepage: NextPageWithLayout = function () {
           phoneNumber: fetchedAccount.phoneNumber,
         };
 
-        //Validations
-
         setAccount(currentAccount);
-        setIsLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        alert("Something went wrong");
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [router]);
 
@@ -126,7 +141,7 @@ const Profilepage: NextPageWithLayout = function () {
             <header>
               <div className="flex justify-between mb-4">
                 <h2 className="font-bold text-lg">Jobs preferences</h2>
-                <button type="button" className="px-2 text-md">
+                <button title="edit" type="button" className="px-2 text-md">
                   <i className="fas fa-edit"></i>
                 </button>
               </div>

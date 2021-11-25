@@ -19,7 +19,7 @@ const RegisterPage: NextPageWithLayout = function () {
     axios
       .post("/api/account", newAccountData)
       .then((response) => {
-        if (response.status === 200) {
+        if (response.data.ok) {
           const { token, id: accountId } = response.data;
           const accountRole = newAccountData.role;
 
@@ -30,10 +30,10 @@ const RegisterPage: NextPageWithLayout = function () {
           alert("Account registered successfully");
           router.replace(`/${accountRole}/${accountId}/dashboard`);
         } else {
-          alert("Something went wrong");
+          alert(response.data.info);
         }
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.log(error.message);
       });
   };
