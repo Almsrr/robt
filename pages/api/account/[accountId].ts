@@ -36,8 +36,16 @@ export default async function handler(
       const account = await getAccountBy("id", accountId);
 
       if (account?.password === password) {
-        await updateAccountEmail(accountId, newEmail);
-        res.status(200).json({ ok: true, info: null });
+        const { success, error, data } = await updateAccountEmail(
+          accountId,
+          newEmail
+        );
+
+        if (success && !error) {
+          res.status(200).json({ ok: true, info: null });
+        } else if (!success && !error) {
+          res.status(200).json({ ok: false, info: data });
+        }
       } else {
         res.status(200).json({ ok: false, info: "INCORRECT PASSWORD" });
       }

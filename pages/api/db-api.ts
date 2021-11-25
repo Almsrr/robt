@@ -264,25 +264,29 @@ export const updateAccountEmail = (accountId: string, newEmail: string) => {
     [newEmail, accountId]
   );
 
-  return new Promise((resolve) => {
-    try {
-      pool.getConnection((error, con) => {
-        if (error) throw new Error(error.message);
+  return new Promise<dbResult>(async (resolve) => {
+    const accountExists = await alreadyExists("Account", "email", newEmail);
 
-        con.query(updateEmailQuery, (error, results) => {
+    if (!accountExists) {
+      try {
+        pool.getConnection((error, con) => {
           if (error) throw new Error(error.message);
 
-          const dbResult = <OkPacket>results;
-          if (dbResult.affectedRows === 1) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
+          con.query(updateEmailQuery, (error, results) => {
+            if (error) throw new Error(error.message);
+
+            const dbResult = <OkPacket>results;
+            if (dbResult.affectedRows === 1) {
+              resolve({ success: true, error: false, data: null });
+            }
+          });
         });
-      });
-    } catch (error: any) {
-      console.log(error.message);
-      resolve(false);
+      } catch (error: any) {
+        console.log(error.message);
+        resolve({ success: false, error: true, data: null });
+      }
+    } else {
+      resolve({ success: false, error: false, data: "ACCOUNT ALREADY IN USE" });
     }
   });
 };
