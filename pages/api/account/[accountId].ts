@@ -39,7 +39,7 @@ export default async function handler(
         await updateAccountEmail(accountId, newEmail);
         res.status(200).json({ ok: true, info: null });
       } else {
-        res.status(200).json({ ok: false, info: "SOMETHING WENT WRONG" });
+        res.status(200).json({ ok: false, info: "INCORRECT PASSWORD" });
       }
       break;
     }

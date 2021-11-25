@@ -6,20 +6,20 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "PUT") {
-    const { newPhoneNumber, password, accountId } = req.body;
+    const { accountId, password, newPhoneNumber } = req.body;
     const account = await getAccountBy("id", accountId);
-    console.log(password, account?.password, accountId);
+    // console.log(password, account?.password, accountId);
 
     if (account?.password === password) {
       const phoneUpdated = await updateUserPhone(newPhoneNumber, accountId);
 
       if (phoneUpdated) {
-        res.status(200).json({ success: true });
+        res.status(200).json({ ok: true });
       } else {
-        res.status(502).send("");
+        res.status(502).send("SOMETHING WENT WRONG");
       }
     } else {
-      res.status(406).send("INCORRECT PASSWORD");
+      res.status(200).send({ ok: false, info: "INCORRECT PASSWORD" });
     }
   }
 }
