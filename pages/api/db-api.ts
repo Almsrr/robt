@@ -1,6 +1,6 @@
-import mysql, { OkPacket, ResultSetHeader, RowDataPacket } from "mysql2";
-import Account from "../../../models/Account";
-import User from "../../../models/User";
+import mysql, { OkPacket, RowDataPacket } from "mysql2";
+import Account from "../../models/Account";
+import User from "../../models/User";
 
 const pool = mysql.createPool({
   connectionLimit: 50,
@@ -257,68 +257,6 @@ export const createNewAccount = async (newAccount: Account) => {
   });
 };
 
-export const getAccountPassword = (field: string, value: string) => {
-  const selectQuery = mysql.format("SELECT password FROM Account WHERE ??=?", [
-    field,
-    value,
-  ]);
-  return new Promise<string>(async (resolve) => {
-    try {
-      pool.getConnection((error, con) => {
-        if (error) throw new Error(error.message);
-
-        con.query(selectQuery, (error, results) => {
-          if (error) throw new Error(error.message);
-          con.release();
-
-          const rows = <RowDataPacket[]>results;
-
-          if (rows.length > 0) {
-            const accountPassword = rows[0].password;
-            resolve(accountPassword);
-          } else {
-            resolve("");
-          }
-        });
-      });
-    } catch (error: any) {
-      console.log(error.message);
-      resolve("");
-    }
-  });
-};
-
-export const getAccountId = (field: string, value: string) => {
-  const selectQuery = mysql.format(
-    "SELECT account_id FROM Account WHERE ??=?",
-    [field, value]
-  );
-  return new Promise<string>(async (resolve) => {
-    try {
-      pool.getConnection((error, con) => {
-        if (error) throw new Error(error.message);
-
-        con.query(selectQuery, (error, results) => {
-          if (error) throw new Error(error.message);
-          con.release();
-
-          const rows = <RowDataPacket[]>results;
-
-          if (rows.length > 0) {
-            const accountId = rows[0].account_id;
-            resolve(accountId);
-          } else {
-            resolve("");
-          }
-        });
-      });
-    } catch (error: any) {
-      console.log(error.message);
-      resolve("");
-    }
-  });
-};
-
 export const updateAccountEmail = (accountId: string, newEmail: string) => {
   const updateEmailQuery = mysql.format(
     "UPDATE Account SET email=? WHERE id=?",
@@ -335,6 +273,36 @@ export const updateAccountEmail = (accountId: string, newEmail: string) => {
 
           const dbResult = <OkPacket>results;
           if (dbResult.affectedRows === 1) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+      });
+    } catch (error: any) {
+      console.log(error.message);
+      resolve(false);
+    }
+  });
+};
+
+export const updateUserPhone = (newPhoneNumber: string, accountId: string) => {
+  const updatePhoneQuery = mysql.format(
+    "UPDATE User SET phone_number=? WHERE account_id=?",
+    [newPhoneNumber, accountId]
+  );
+
+  return new Promise<boolean>((resolve) => {
+    try {
+      pool.getConnection((error, con) => {
+        if (error) throw new Error(error.message);
+
+        con.query(updatePhoneQuery, (error, results) => {
+          if (error) throw new Error(error.message);
+
+          const dbResponse = <OkPacket>results;
+          console.log(dbResponse);
+          if (dbResponse.affectedRows === 1) {
             resolve(true);
           } else {
             resolve(false);

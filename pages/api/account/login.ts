@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getAccountBy } from "./db-functions";
+import { getAccountBy } from "../db-api";
 
 interface LoginReponse {
   success: boolean;

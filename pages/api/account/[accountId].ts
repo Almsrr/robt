@@ -1,10 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import {
-  getAccountBy,
-  getUserBy,
-  setUserNames,
-  updateAccountEmail,
-} from "./db-functions";
+import { getAccountBy, getUserBy, updateAccountEmail } from "../db-api";
 
 export default async function handler(
   req: NextApiRequest,
@@ -29,19 +24,6 @@ export default async function handler(
         res.status(200).json({ ...account, ...user });
       } else {
         res.status(400).send("ACCOUNT NOT FOUND");
-      }
-      break;
-    }
-    case "POST": {
-      const { firstName, lastName } = req.body;
-      // console.log(firstName, lastName);
-
-      const namesUpdated = await setUserNames(firstName, lastName, accountId);
-
-      if (namesUpdated) {
-        res.status(200).send("NAMES UPDATED SUCCESSFULLY");
-      } else {
-        res.status(502).send("");
       }
       break;
     }
