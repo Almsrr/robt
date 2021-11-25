@@ -39,7 +39,7 @@ const ContactInformation: FC<User> = function (props) {
   };
 
   const editEmailUrl = `/account/change-email?accountId=${props.id}&email=${props.email}&role=${props.role}`;
-  // const editPhoneNumberUrl = `/account/change-phone-number?account=${props.id}`;
+  const updatePhoneNumberUrl = `/account/change-phone-number?accountId=${props.id}&role=${props.role}`;
 
   const preview = (
     <div className="pb-5 text-gray-500">
@@ -118,14 +118,19 @@ const ContactInformation: FC<User> = function (props) {
           </span>
         </label>
         {!hasPhoneNumber && (
-          <button className="text-blue-600 text-sm flex items-center">
-            <i className="fas fa-plus-circle pr-2 text-lg"></i>Add phone number
-          </button>
+          <Link href={updatePhoneNumberUrl}>
+            <a className="text-blue-600 text-sm flex items-center">
+              <i className="fas fa-plus-circle pr-2 text-lg"></i>Add phone
+              number
+            </a>
+          </Link>
         )}
         {hasPhoneNumber && (
           <p>
             {props.phoneNumber}
-            <button className="text-blue-600 text-xs mx-2">edit</button>
+            <Link href={updatePhoneNumberUrl}>
+              <a className="text-blue-600 text-xs mx-2">edit</a>
+            </Link>
           </p>
         )}
       </div>
