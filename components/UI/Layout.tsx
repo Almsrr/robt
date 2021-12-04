@@ -11,7 +11,7 @@ const Layout: FC = function (props) {
   return (
     <>
       <Navigation />
-      {props.children}
+      <div className="page-content">{props.children}</div>
       {isAuth && <ChatBox />}
       <Footer />
     </>

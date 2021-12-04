@@ -66,3 +66,16 @@ h1 {
 .form-input {
   @apply border border-black p-2;
 }
+
+.page-content {
+  min-height: 500px;
+}
+
+.jobs-section {
+  max-width: 1000px;
+  min-height: 500px;
+}
+
+.jobs-list__item {
+  position: relative;
+}
