@@ -320,3 +320,30 @@ export const updateUserPhone = (newPhoneNumber: string, accountId: string) => {
     }
   });
 };
+
+export const getAllJobs = (keyword: string) => {
+  const jobsQuery = mysql.format("SELECT * FROM Jobs WHERE %%?", []);
+
+  return new Promise((resolve) => {
+    try {
+      pool.getConnection((error, con) => {
+        if (error) throw new Error(error.message);
+
+        con.query(jobsQuery, (error, results) => {
+          if (error) throw new Error(error.message);
+
+          const rows = <RowDataPacket[]>results;
+
+          if (rows.length !== 0) {
+            resolve(rows);
+          } else {
+            resolve(null);
+          }
+        });
+      });
+    } catch (error: any) {
+      console.log(error.message);
+      resolve(null);
+    }
+  });
+};

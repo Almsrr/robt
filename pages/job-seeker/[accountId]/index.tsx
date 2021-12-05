@@ -105,10 +105,10 @@ const Profilepage: NextPageWithLayout = function () {
   }, [router]);
 
   return (
-    <>
-      <main className="max-w-xl mx-auto mt-8">
-        <header className="pb-5">
-          <div className="flex items-center">
+    <main>
+      <div className="flex flex-col items-center py-8">
+        <div className="resume">
+          <header className="mb-5 flex items-center">
             <Image
               src="/download.png"
               alt="user-profile-picture"
@@ -121,41 +121,41 @@ const Profilepage: NextPageWithLayout = function () {
                 <h2 className="font-bold text-4xl">{userFullName}</h2>
               )}
             </div>
-          </div>
-        </header>
-        <section>
-          <Resume />
-          <ContactInformation
-            id={account.id}
-            firstName={userFirstName}
-            lastName={userLastName}
-            email={account.email}
-            role={account.role}
-            phoneNumber={userPhoneNumber}
-            previewMode={previewMode}
-            onTogglePreview={togglePreviewHandler}
-            onSave={saveInfoHandler}
-          />
+          </header>
+          <div>
+            <Resume />
+            <ContactInformation
+              id={account.id}
+              firstName={userFirstName}
+              lastName={userLastName}
+              email={account.email}
+              role={account.role}
+              phoneNumber={userPhoneNumber}
+              previewMode={previewMode}
+              onTogglePreview={togglePreviewHandler}
+              onSave={saveInfoHandler}
+            />
 
-          <section className="border border-gray-300 rounded-md p-3">
-            <header>
-              <div className="flex justify-between mb-4">
-                <h2 className="font-bold text-lg">Jobs preferences</h2>
-                <button title="edit" type="button" className="px-2 text-md">
-                  <i className="fas fa-edit"></i>
-                </button>
+            <section className="border border-gray-300 rounded-md p-3">
+              <header>
+                <div className="flex justify-between mb-4">
+                  <h2 className="font-bold text-lg">Jobs preferences</h2>
+                  <button title="edit" type="button" className="px-2 text-md">
+                    <i className="fas fa-edit"></i>
+                  </button>
+                </div>
+              </header>
+              <div className="pb-5 text-gray-500">
+                <p className="text-sm">
+                  Save specific details like desired pay and schedule that help
+                  us match you with better jobs
+                </p>
               </div>
-            </header>
-            <div className="pb-5 text-gray-500">
-              <p className="text-sm">
-                Save specific details like desired pay and schedule that help us
-                match you with better jobs
-              </p>
-            </div>
-          </section>
-        </section>
-      </main>
-    </>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 };
 

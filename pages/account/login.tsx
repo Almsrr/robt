@@ -41,15 +41,11 @@ const LoginPage: NextPageWithLayout = function () {
   };
 
   return (
-    <main className="page">
-      <div className="container">
-        <section>
-          <span className="block pb-3 text-center font-bold text-4xl">
-            Robt
-          </span>
-          <LoginForm onLogin={loginHandler} />
-        </section>
-      </div>
+    <main className="page-content">
+      <section className="flex flex-col items-center py-8">
+        <span className="mb-3 text-center font-bold text-4xl">Robt</span>
+        <LoginForm onLogin={loginHandler} />
+      </section>
     </main>
   );
 };

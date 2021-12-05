@@ -105,7 +105,9 @@ const SearchJobsPage: NextPageWithLayout = function ({
       <header className="py-8">
         <div className="mx-auto" style={{ maxWidth: 1000 }}>
           <JobForm input={input} onSearch={searchJobsHandler} />
-          <JobFilter onFilter={filterJobHandler} />
+          <div className="pt-4">
+            <JobFilter onFilter={filterJobHandler} />
+          </div>
         </div>
       </header>
       <main className="bg-gray-100 py-8">

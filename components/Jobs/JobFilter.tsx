@@ -16,7 +16,7 @@ const JobFilter: FC<{ onFilter(type: string, value: string): void }> =
     };
 
     return (
-      <div className="flex py-4">
+      <div className="flex">
         <div>
           <select id="date" onChange={filterHandler}>
             <option value="">Date posted</option>
