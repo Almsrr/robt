@@ -1,38 +1,41 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 
 import JobCard from "./JobCard";
+import LoadingSpinner from "../UI/Spinner/Spinner";
 
 interface JobsListProps {
   jobs: any[];
-  showDetail(job: any): void;
+  loading: boolean;
+  targetJob: any;
+  selectJob(job: any): void;
 }
 
 const JobsList: FC<JobsListProps> = function (props) {
-  const { jobs, showDetail } = props;
-  const [selectedItemId, setSelectedItemId] = useState(jobs[0].id);
+  const { jobs, loading, targetJob, selectJob } = props;
 
-  const selectItemHandler = (job: any) => {
-    setSelectedItemId(job.id);
-    showDetail(job);
-  };
-
-  if (jobs.length === 0) {
+  if (loading) {
+    return (
+      <div className="flex justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  } else if (jobs.length === 0) {
     return <p>Jobs not found</p>;
+  } else {
+    return (
+      <ul className="jobs-list">
+        {jobs.map((job) => (
+          <li key={job.id} className="jobs-list__item">
+            <JobCard
+              job={job}
+              selectedId={targetJob.id}
+              onSelected={selectJob}
+            />
+          </li>
+        ))}
+      </ul>
+    );
   }
-
-  return (
-    <ul className="jobs-list">
-      {jobs.map((job) => (
-        <li key={job.id} className="jobs-list__item">
-          <JobCard
-            job={job}
-            selectedId={selectedItemId}
-            onSelected={selectItemHandler}
-          />
-        </li>
-      ))}
-    </ul>
-  );
 };
 
 export default JobsList;

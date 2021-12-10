@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, FormEvent, useRef } from "react";
+import { ChangeEvent, FC, FormEvent, useRef, memo } from "react";
 
 const JobFilter: FC<{ onFilter(type: string, value: string): void }> =
   function (props) {
@@ -48,4 +48,4 @@ const JobFilter: FC<{ onFilter(type: string, value: string): void }> =
     );
   };
 
-export default JobFilter;
+export default memo(JobFilter);
