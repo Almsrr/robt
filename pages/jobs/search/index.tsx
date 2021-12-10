@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-import { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState, useCallback } from "react";
 
 import { NextPageWithLayout } from "../../_app";
 import Layout from "../../../components/UI/Layout";
@@ -9,96 +9,45 @@ import JobsList from "../../../components/Jobs/JobsList";
 import JobDetail from "../../../components/Jobs/JobDetail";
 import JobForm from "../../../components/Jobs/JobForm";
 import JobFilter from "../../../components/Jobs/JobFilter";
-
-const availableJobs = [
-  {
-    id: "j1",
-    title: "React Developer",
-    location: "CA, USA",
-    company: "Facebook",
-    companyRate: 3.4,
-    date: "02-12-2021",
-    description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloremque quasi tempora sint at aut, ratione nam natus ipsam sequi reiciendis molestias voluptatem ducimus dolorem modi distinctio nobis temporibus atque. Ex!",
-    salary: 100.0,
-    responsabilities: ["Programming", "Debug", "Test", "Desing"],
-    requierements: ["1 year of experience", "React 17", "NodeJS"],
-  },
-  {
-    id: "j2",
-    title: "Angular Developer",
-    location: "NY, USA",
-    company: "Google",
-    companyRate: 3.4,
-    date: "02-12-2021",
-    description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloremque quasi tempora sint at aut, ratione nam natus ipsam sequi reiciendis molestias voluptatem ducimus dolorem modi distinctio nobis temporibus atque. Ex!",
-    salary: 100.0,
-    responsabilities: ["Programming", "Debug", "Test", "Desing"],
-    requierements: ["1 year of experience", "Angular", "NodeJS"],
-  },
-  {
-    id: "j3",
-    title: "Ember Developer",
-    location: "NY, USA",
-    company: "Google",
-    companyRate: 3.4,
-    date: "02-12-2021",
-    description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloremque quasi tempora sint at aut, ratione nam natus ipsam sequi reiciendis molestias voluptatem ducimus dolorem modi distinctio nobis temporibus atque. Ex!",
-    salary: 100.0,
-    responsabilities: ["Programming", "Debug", "Test", "Desing"],
-    requierements: ["1 year of experience", "Angular", "NodeJS"],
-  },
-  {
-    id: "j4",
-    title: "Vue Developer",
-    location: "NY, USA",
-    company: "Google",
-    companyRate: 3.4,
-    date: "02-12-2021",
-    description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloremque quasi tempora sint at aut, ratione nam natus ipsam sequi reiciendis molestias voluptatem ducimus dolorem modi distinctio nobis temporibus atque. Ex!",
-    salary: 100.0,
-    responsabilities: ["Programming", "Debug", "Test", "Desing"],
-    requierements: ["1 year of experience", "Angular", "NodeJS"],
-  },
-  {
-    id: "j5",
-    title: "Java Developer",
-    location: "NY, USA",
-    company: "Google",
-    companyRate: 3.4,
-    date: "02-12-2021",
-    description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloremque quasi tempora sint at aut, ratione nam natus ipsam sequi reiciendis molestias voluptatem ducimus dolorem modi distinctio nobis temporibus atque. Ex!",
-    salary: 100.0,
-    responsabilities: ["Programming", "Debug", "Test", "Desing"],
-    requierements: ["1 year of experience", "Angular", "NodeJS"],
-  },
-];
+import { getJobs } from "../../api/db-api";
 
 const SearchJobsPage: NextPageWithLayout = function ({
   jobs,
   input,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const [jobDetail, setJobDetail] = useState({ targetJob: jobs[0] });
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedJob, setSelectedJob] = useState(null);
   const router = useRouter();
 
-  const showJobDetailHandler = (job: any) => {
-    setJobDetail({ targetJob: job });
+  const selectJobHandler = (job: any): void => {
+    setSelectedJob(job);
   };
 
-  const searchJobsHandler = (what: string, where: string) => {
-    router.push(`/jobs/search?what=${what}&where=${where}`);
-  };
+  const searchJobsHandler = useCallback(
+    (what: string, where: string): void => {
+      setIsLoading(true);
+      router.replace(`/jobs/search?what=${what}&where=${where}`);
+    },
+    [router]
+  );
 
-  const filterJobHandler = (type: string, value: string) => {
+  const filterJobHandler = useCallback((type: string, value: string): void => {
     console.log(type, value);
     // const path = router.asPath;
     // console.log(router);
     // router.push(`${path}&${type}=${value}`);
-  };
+  }, []);
+
+  // console.log(jobs);
+  // console.log(isLoading);
+  // console.log(selectedJob);
+
+  useEffect(() => {
+    const firstJob = jobs[0] || null;
+    setSelectedJob(firstJob);
+
+    setIsLoading(false);
+  }, [jobs]);
 
   return (
     <>
@@ -111,12 +60,22 @@ const SearchJobsPage: NextPageWithLayout = function ({
         </div>
       </header>
       <main className="bg-gray-100 py-8">
-        <section className="flex mx-auto" style={{ maxWidth: 1000 }}>
-          <div className="w-2/5">
-            <JobsList jobs={jobs} showDetail={showJobDetailHandler} />
-          </div>
-          <div className="w-3/5">
-            <JobDetail targetJob={jobDetail.targetJob} />
+        <section className="mx-auto" style={{ maxWidth: 1000 }}>
+          <p className="text-sm text-gray-600 font-bold mb-2">
+            Jobs found: {jobs.length}
+          </p>
+          <div className="flex">
+            <div className="w-2/5">
+              <JobsList
+                jobs={jobs}
+                targetJob={selectedJob}
+                selectJob={selectJobHandler}
+                loading={isLoading}
+              />
+            </div>
+            <div className="w-3/5">
+              <JobDetail targetJob={selectedJob} loading={isLoading} />
+            </div>
           </div>
         </section>
       </main>
@@ -130,6 +89,18 @@ SearchJobsPage.getLayout = function (page: ReactElement) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { what, where } = context.query;
+  let availableJobs: any[] = [];
+
+  if (what && where) {
+    //get jobs
+    const keyword = what.toString();
+    const location = where.toString();
+
+    const loadedJobs = await getJobs(keyword, location);
+    if (loadedJobs) {
+      availableJobs = loadedJobs;
+    }
+  }
 
   return {
     props: {
