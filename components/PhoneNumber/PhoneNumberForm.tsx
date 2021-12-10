@@ -15,7 +15,7 @@ const PhoneNumberForm: FC<PhoneNumberFormProps> = function (props) {
     props.onSubmit();
   };
   return (
-    <section className="border border-gray-300 rounded-md p-3">
+    <div className="w-full max-w-3xl border border-gray-300 rounded-md p-4">
       <header>
         <h1 className="font-bold text-2xl mb-2">
           Add and verify your phone number
@@ -90,7 +90,7 @@ const PhoneNumberForm: FC<PhoneNumberFormProps> = function (props) {
           </button>
         </div>
       </form>
-    </section>
+    </div>
   );
 };
 

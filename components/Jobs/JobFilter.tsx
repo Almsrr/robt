@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, FormEvent, useRef } from "react";
+import { ChangeEvent, FC, FormEvent, useRef, memo } from "react";
 
 const JobFilter: FC<{ onFilter(type: string, value: string): void }> =
   function (props) {
@@ -16,7 +16,7 @@ const JobFilter: FC<{ onFilter(type: string, value: string): void }> =
     };
 
     return (
-      <div className="flex py-4">
+      <div className="flex">
         <div>
           <select id="date" onChange={filterHandler}>
             <option value="">Date posted</option>
@@ -48,4 +48,4 @@ const JobFilter: FC<{ onFilter(type: string, value: string): void }> =
     );
   };
 
-export default JobFilter;
+export default memo(JobFilter);

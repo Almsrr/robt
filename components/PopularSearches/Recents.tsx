@@ -7,11 +7,14 @@ const someRecents = [
 
 const Recents: FC = function () {
   return (
-    <ul>
-      {someRecents.map((search) => (
-        <li key={search.id}>{search.title}</li>
-      ))}
-    </ul>
+    <section>
+      <h3 className="text-2xl font-bold">Recent searches</h3>
+      <ul>
+        {someRecents.map((search) => (
+          <li key={search.id}>{search.title}</li>
+        ))}
+      </ul>
+    </section>
   );
 };
 

@@ -29,8 +29,6 @@ h1 {
 .form {
   width: 100%;
   max-width: 450px;
-  margin-left: auto;
-  margin-right: auto;
   @apply border border-gray-400 rounded p-4;
 }
 
@@ -78,4 +76,10 @@ h1 {
 
 .jobs-list__item {
   position: relative;
+}
+
+.resume {
+  width: 100%;
+  max-width: 37rem;
+  padding: 1rem;
 }

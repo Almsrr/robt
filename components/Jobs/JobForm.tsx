@@ -1,4 +1,4 @@
-import { FC, FormEvent, useRef } from "react";
+import { FC, FormEvent, useRef, memo } from "react";
 
 const JobForm: FC<{
   input?: { what: string; where: string };
@@ -70,4 +70,4 @@ const JobForm: FC<{
   );
 };
 
-export default JobForm;
+export default memo(JobForm);

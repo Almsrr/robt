@@ -37,7 +37,7 @@ const PhoneNumberCodeInput: FC<PhoneNumberCodeInputProps> = function (props) {
   };
 
   return (
-    <section className="border border-gray-300 rounded-md p-3 mx-auto max-w-sm">
+    <div className="w-full max-w-sm border border-gray-300 rounded-md p-4">
       <header>
         <h1 className="font-bold text-2xl">We sent you a code!</h1>
       </header>
@@ -62,12 +62,12 @@ const PhoneNumberCodeInput: FC<PhoneNumberCodeInputProps> = function (props) {
         <button
           type="button"
           onClick={backHandler}
-          className="text-sm text-blue-600 block w-max mx-auto mt-2 mb-4"
+          className="text-sm text-blue-600 block w-max mx-auto my-2 mb-2"
         >
           Did not receive the code?
         </button>
       </form>
-    </section>
+    </div>
   );
 };
 

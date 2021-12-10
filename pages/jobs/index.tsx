@@ -23,17 +23,16 @@ const Jobs: NextPageWithLayout = function () {
         </div>
       </header>
       <main>
-        <div className="container">
+        <section className="container">
           <div className="flex">
-            <section className="w-9/12 float-left">
+            <div className="w-9/12 float-left">
               <h2 className="text-4xl font-bold">News </h2>
-            </section>
-            <aside className="w-3/12 float-right">
-              <h3 className="text-2xl font-bold">Recent searches</h3>
+            </div>
+            <div className="w-3/12 float-right">
               <Recents />
-            </aside>
+            </div>
           </div>
-        </div>
+        </section>
       </main>
     </>
   );

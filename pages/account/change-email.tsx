@@ -43,46 +43,48 @@ const ChangeEmailPage: NextPageWithLayout = function () {
   };
 
   return (
-    <main className="max-w-xl mx-auto mt-8">
-      <section className="border border-gray-300 rounded-md p-3">
-        <header>
-          <h1 className="font-bold text-2xl">Changing email for {email}</h1>
-        </header>
-        <form className="py-6" onSubmit={saveEmailHandler}>
-          <div className="form-row mb-4">
-            <label htmlFor="email" className="font-bold text-lg pb-2">
-              New email address
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="border border-black rounded-lg block w-full p-2"
-              ref={emailRef}
-            />
-          </div>
-          <div className="form-row mb-4">
-            <label htmlFor="password" className="font-bold text-lg pb-2">
-              Current password
-            </label>
-            <input
-              type="password"
-              id="password"
-              className="border border-black rounded-lg block w-full p-2"
-              ref={passwordRef}
-            />
-          </div>
-          <div>
-            <button
-              type="submit"
-              className="bg-black text-white rounded-full font-bold py-3 px-6"
-            >
-              Save email
-            </button>
-            <button className="font-bold py-3 px-6" onClick={goToProfile}>
-              Cancel change
-            </button>
-          </div>
-        </form>
+    <main>
+      <section className="flex flex-col items-center py-8">
+        <div className="max-w-xl border border-gray-300 rounded-md p-4">
+          <header>
+            <h1 className="font-bold text-2xl">Changing email for {email}</h1>
+          </header>
+          <form className="py-6" onSubmit={saveEmailHandler}>
+            <div className="form-row mb-4">
+              <label htmlFor="email" className="font-bold text-lg pb-2">
+                New email address
+              </label>
+              <input
+                type="email"
+                id="email"
+                className="border border-black rounded-lg block w-full p-2"
+                ref={emailRef}
+              />
+            </div>
+            <div className="form-row mb-4">
+              <label htmlFor="password" className="font-bold text-lg pb-2">
+                Current password
+              </label>
+              <input
+                type="password"
+                id="password"
+                className="border border-black rounded-lg block w-full p-2"
+                ref={passwordRef}
+              />
+            </div>
+            <div>
+              <button
+                type="submit"
+                className="bg-black text-white rounded-full font-bold py-3 px-6"
+              >
+                Save email
+              </button>
+              <button className="font-bold py-3 px-6" onClick={goToProfile}>
+                Cancel change
+              </button>
+            </div>
+          </form>
+        </div>
       </section>
     </main>
   );

@@ -65,7 +65,7 @@ const RegisterForm: FC<{ onRegister: (data: any) => void }> = function (props) {
         <input
           ref={emailRef}
           type="email"
-          className="form-input w-full"
+          className="form-input w-full rounded"
           id="email"
         />
       </div>
@@ -76,7 +76,7 @@ const RegisterForm: FC<{ onRegister: (data: any) => void }> = function (props) {
         <input
           ref={passwordRef}
           type="password"
-          className="form-input w-full"
+          className="form-input w-full rounded"
           id="password"
         />
       </div>

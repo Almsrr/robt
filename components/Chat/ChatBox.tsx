@@ -16,7 +16,7 @@ const ChatBox: FC = function () {
         <h4 className="p-3 font-bold">Messages</h4>
       </header>
       {showMessages && (
-        <main className="border">
+        <main className="border bg-white">
           <section className="p-2">
             <p>
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quae

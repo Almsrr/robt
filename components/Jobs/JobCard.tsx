@@ -7,18 +7,18 @@ const JobCard: FC<{
 }> = function (props) {
   const { selectedId, job, onSelected } = props;
 
-  let artClasses = "p-4 cursor-pointer bg-white border";
+  let cardClasses = "p-4 cursor-pointer bg-white border";
   if (selectedId === job.id) {
-    artClasses += " border-black";
+    cardClasses += " border-black";
   }
 
   return (
-    <article className={artClasses} onClick={onSelected.bind(null, job)}>
+    <article className={cardClasses} onClick={onSelected.bind(null, job)}>
       <header>
         <h2 className="font-bold text-xl">{job.title}</h2>
         <p>{job.company}</p>
         <p>{job.location}</p>
-        <p>{job.date}</p>
+        <p>{job.publicationDate}</p>
       </header>
       <section className="pt-4">
         <p className="text-sm text-gray-500">

@@ -70,7 +70,7 @@ const ChangePhoneNumberPage: NextPageWithLayout = function () {
   let viewContent;
   if (isAuthenticating) {
     viewContent = (
-      <section className="border border-gray-300 rounded-md p-3 mx-auto max-w-sm">
+      <div className="w-full max-w-md border border-gray-300 rounded-md p-4">
         <header>
           <h1 className="font-bold text-2xl mb-1">One last step</h1>
           <p className="text-sm text-gray-600">Confirm your identity</p>
@@ -89,7 +89,7 @@ const ChangePhoneNumberPage: NextPageWithLayout = function () {
               onChange={(event) => setPassword(event.target.value)}
             />
           </div>
-          <div className="my-6">
+          <div className="my-2">
             <button
               type="submit"
               className="bg-black text-white rounded-full font-bold py-3 px-6"
@@ -104,7 +104,7 @@ const ChangePhoneNumberPage: NextPageWithLayout = function () {
             </button>
           </div>
         </form>
-      </section>
+      </div>
     );
   } else if (isWaitingCode) {
     viewContent = (
@@ -126,7 +126,13 @@ const ChangePhoneNumberPage: NextPageWithLayout = function () {
     );
   }
 
-  return <main className="max-w-3xl mx-auto mt-8">{viewContent}</main>;
+  return (
+    <main>
+      <section className="flex flex-col items-center py-8">
+        {viewContent}
+      </section>
+    </main>
+  );
 };
 
 ChangePhoneNumberPage.getLayout = function (page: ReactElement) {

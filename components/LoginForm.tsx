@@ -42,7 +42,7 @@ const LoginForm: FC<loginFormProps> = function (props) {
           ref={emailInput}
           type="email"
           placeholder="Email"
-          className="form-input w-full"
+          className="form-input w-full rounded"
         />
       </div>
       <div className="form-row">
@@ -50,7 +50,7 @@ const LoginForm: FC<loginFormProps> = function (props) {
           ref={passwordInput}
           type="password"
           placeholder="Password"
-          className="form-input w-full"
+          className="form-input w-full rounded"
         />
         <Link href="#">
           <a className="text-sm text-gray-600 cursor-point mt-1">
