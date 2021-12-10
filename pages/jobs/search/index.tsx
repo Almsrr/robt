@@ -10,6 +10,7 @@ import JobDetail from "../../../components/Jobs/JobDetail";
 import JobForm from "../../../components/Jobs/JobForm";
 import JobFilter from "../../../components/Jobs/JobFilter";
 import { getJobs } from "../../api/db-api";
+import type Job from "../../../models/Job";
 
 const SearchJobsPage: NextPageWithLayout = function ({
   jobs,
@@ -89,7 +90,7 @@ SearchJobsPage.getLayout = function (page: ReactElement) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { what, where } = context.query;
-  let availableJobs: any[] = [];
+  let availableJobs: Job[] = [];
 
   if (what && where) {
     //get jobs

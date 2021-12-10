@@ -1,6 +1,7 @@
 import mysql, { OkPacket, RowDataPacket } from "mysql2";
 import Account from "../../models/Account";
 import User from "../../models/User";
+import type Job from "../../models/Job";
 
 const pool = mysql.createPool({
   connectionLimit: 50,
@@ -30,19 +31,6 @@ interface userData {
   firstName: string;
   lastName: string;
   phoneNumber: string;
-}
-
-interface jobData {
-  id: string;
-  title: string;
-  location: string;
-  company: string;
-  companyRate: number;
-  publicationDate: string;
-  description: string;
-  salary: number;
-  responsabilities: string[];
-  requierements: string[];
 }
 
 export const getAccountBy = (field: string, value: string) => {
@@ -349,7 +337,7 @@ export const getJobs = (keyword: string, location: string) => {
     [keywordExp, locationExp]
   );
 
-  return new Promise<jobData[] | null>((resolve) => {
+  return new Promise<Job[] | null>((resolve) => {
     try {
       pool.getConnection((error, con) => {
         if (error) throw new Error(error.message);
@@ -359,7 +347,7 @@ export const getJobs = (keyword: string, location: string) => {
           con.release();
 
           const rows = <RowDataPacket[]>results;
-          let jobs: jobData[] = [];
+          let jobs: Job[] = [];
 
           if (rows.length !== 0) {
             // console.log(rows);
