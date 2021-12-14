@@ -1,7 +1,13 @@
 import { useRouter } from "next/router";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-import React, { ReactElement, useEffect, useState, useCallback } from "react";
+import React, {
+  ReactElement,
+  useEffect,
+  useCallback,
+  useReducer,
+  Reducer,
+  useState,
+} from "react";
 
 import { NextPageWithLayout } from "../../_app";
 import Layout from "../../../components/UI/Layout";
@@ -9,52 +15,147 @@ import JobsList from "../../../components/Jobs/JobsList";
 import JobDetail from "../../../components/Jobs/JobDetail";
 import JobForm from "../../../components/Jobs/JobForm";
 import JobFilter from "../../../components/Jobs/JobFilter";
-import { getJobs } from "../../api/db-api";
 import type Job from "../../../models/Job";
+import axios from "axios";
 
-const SearchJobsPage: NextPageWithLayout = function ({
-  jobs,
-  input,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedJob, setSelectedJob] = useState(null);
+type UserInput = {
+  keyword: string;
+  location: string;
+};
+
+type JobData = {
+  list: Job[];
+  isLoading: boolean;
+  error: boolean;
+  userInput: UserInput;
+};
+
+type JobDataAction = {
+  type: string;
+  payload?: Job[];
+  input?: UserInput;
+};
+
+const jobsReducer: Reducer<JobData, JobDataAction> = (state, action) => {
+  const { type, payload, input } = action;
+  switch (type) {
+    case "PENDING":
+      return { ...state, isLoading: true };
+
+    case "COMPLETED":
+      if (payload && input) {
+        return {
+          isLoading: false,
+          list: payload,
+          error: false,
+          userInput: input,
+        };
+      } else if (payload) {
+        return {
+          ...state,
+          isLoading: false,
+          list: payload,
+          error: false,
+        };
+      }
+      return state;
+
+    case "ERROR":
+      return { ...state, isLoading: false, error: true };
+
+    default:
+      return state;
+  }
+};
+
+const initalState: JobData = {
+  list: [],
+  isLoading: true,
+  error: false,
+  userInput: { keyword: "", location: "" },
+};
+const SearchJobsPage: NextPageWithLayout = function () {
+  const [jobs, dispatchjobs] = useReducer<typeof jobsReducer>(
+    jobsReducer,
+    initalState
+  );
+  const [targetJob, setTargetJob] = useState<Job>();
   const router = useRouter();
 
-  const selectJobHandler = (job: any): void => {
-    setSelectedJob(job);
+  const selectJobHandler = (job: Job): void => {
+    setTargetJob(job);
   };
 
   const searchJobsHandler = useCallback(
-    (what: string, where: string): void => {
-      setIsLoading(true);
-      router.replace(`/jobs/search?what=${what}&where=${where}`);
+    (keyword: string, location: string): void => {
+      dispatchjobs({ type: "PENDING" });
+      const url = `/jobs/search?what=${keyword}&where=${location}`;
+      router.replace(url);
     },
     [router]
   );
 
-  const filterJobHandler = useCallback((type: string, value: string): void => {
-    console.log(type, value);
-    // const path = router.asPath;
-    // console.log(router);
-    // router.push(`${path}&${type}=${value}`);
-  }, []);
+  const filterJobHandler = useCallback(
+    (type: string, value: string): void => {
+      const { what, where } = router.query;
+      let url = `/api/jobs?what=${what}&where=${where}`;
 
-  // console.log(jobs);
-  // console.log(isLoading);
-  // console.log(selectedJob);
+      switch (type) {
+        case "date-posted":
+          if (value !== "any") url += `&datePosted=${value}`;
+          break;
+
+        default:
+          break;
+      }
+      // console.log(url);
+      dispatchjobs({ type: "PENDING" });
+      axios
+        .get<Job[]>(url)
+        .then((response) => {
+          setTargetJob(response.data[0]);
+          dispatchjobs({ type: "COMPLETED", payload: response.data });
+        })
+        .catch((e: any) => {
+          dispatchjobs({ type: "ERROR" });
+          console.log(e);
+        });
+    },
+    [router.query]
+  );
 
   useEffect(() => {
-    const firstJob = jobs[0] || null;
-    setSelectedJob(firstJob);
+    console.log("EFFECT!");
+    const { what, where } = router.query;
+    const whatInputWord = what?.toString();
+    const whereInputWord = where?.toString();
 
-    setIsLoading(false);
-  }, [jobs]);
+    if (whatInputWord && whereInputWord) {
+      axios
+        .get<Job[]>(`/api/jobs?what=${whatInputWord}&where=${whereInputWord}`)
+        .then((response) => {
+          setTargetJob(response.data[0]);
+          dispatchjobs({
+            type: "COMPLETED",
+            payload: response.data,
+            input: { keyword: whatInputWord, location: whereInputWord },
+          });
+        })
+        .catch((e: ErrorEvent) => {
+          if (axios.isAxiosError(e)) {
+            // handle axios error
+          }
+          console.log(e.message);
+          dispatchjobs({ type: "ERROR" });
+        });
+    }
+  }, [router.query]);
 
   return (
     <>
       <header className="py-8">
         <div className="mx-auto" style={{ maxWidth: 1000 }}>
-          <JobForm input={input} onSearch={searchJobsHandler} />
+          <JobForm input={jobs.userInput} onSearch={searchJobsHandler} />
           <div className="pt-4">
             <JobFilter onFilter={filterJobHandler} />
           </div>
@@ -63,19 +164,19 @@ const SearchJobsPage: NextPageWithLayout = function ({
       <main className="bg-gray-100 py-8">
         <section className="mx-auto" style={{ maxWidth: 1000 }}>
           <p className="text-sm text-gray-600 font-bold mb-2">
-            Jobs found: {jobs.length}
+            Jobs found: {jobs.list.length}
           </p>
           <div className="flex">
             <div className="w-2/5">
               <JobsList
-                jobs={jobs}
-                targetJob={selectedJob}
+                jobs={jobs.list}
+                selectedJob={targetJob}
                 selectJob={selectJobHandler}
-                loading={isLoading}
+                loading={jobs.isLoading}
               />
             </div>
             <div className="w-3/5">
-              <JobDetail targetJob={selectedJob} loading={isLoading} />
+              <JobDetail targetJob={targetJob} loading={jobs.isLoading} />
             </div>
           </div>
         </section>
@@ -86,29 +187,6 @@ const SearchJobsPage: NextPageWithLayout = function ({
 
 SearchJobsPage.getLayout = function (page: ReactElement) {
   return <Layout>{page}</Layout>;
-};
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { what, where } = context.query;
-  let availableJobs: Job[] = [];
-
-  if (what && where) {
-    //get jobs
-    const keyword = what.toString();
-    const location = where.toString();
-
-    const loadedJobs = await getJobs(keyword, location);
-    if (loadedJobs) {
-      availableJobs = loadedJobs;
-    }
-  }
-
-  return {
-    props: {
-      jobs: availableJobs,
-      input: { what, where },
-    },
-  };
 };
 
 export default SearchJobsPage;
