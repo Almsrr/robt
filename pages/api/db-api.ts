@@ -324,25 +324,28 @@ export const updateUserPhone = (newPhoneNumber: string, accountId: string) => {
   });
 };
 
-export const getJobs = (keyword: string, location: string) => {
+// const jobsQuery = mysql.format(
+//   "SELECT * FROM Job WHERE title LIKE ? AND location LIKE ? OR LOWER(requierements) LIKE LOWER(?)",
+//   [keywordExp, locationExp, keywordExp]
+// );
+export const getJobs = (
+  keyword: string,
+  location: string
+): Promise<Job[] | null> => {
   const keywordExp = `%${keyword}%`;
   const locationExp = `%${location}%`;
 
-  // const jobsQuery = mysql.format(
-  //   "SELECT * FROM Job WHERE title LIKE ? AND location LIKE ? OR LOWER(requierements) LIKE LOWER(?)",
-  //   [keywordExp, locationExp, keywordExp]
-  // );
-  const jobsQuery = mysql.format(
-    "SELECT * FROM Job WHERE title LIKE ? AND location LIKE ?",
+  const getJobsQuery = mysql.format(
+    "SELECT * FROM Job WHERE title LIKE ? AND location LIKE ? ORDER BY publication_date DESC",
     [keywordExp, locationExp]
   );
 
-  return new Promise<Job[] | null>((resolve) => {
+  return new Promise((resolve) => {
     try {
       pool.getConnection((error, con) => {
         if (error) throw new Error(error.message);
 
-        con.query(jobsQuery, (error, results) => {
+        con.query(getJobsQuery, (error, results) => {
           if (error) throw new Error(error.message);
           con.release();
 
@@ -351,6 +354,7 @@ export const getJobs = (keyword: string, location: string) => {
 
           if (rows.length !== 0) {
             // console.log(rows);
+
             for (const row of rows) {
               jobs.push({
                 id: row.id,
@@ -369,7 +373,7 @@ export const getJobs = (keyword: string, location: string) => {
             }
             resolve(jobs);
           } else {
-            resolve(null);
+            resolve(jobs);
           }
         });
       });
@@ -380,52 +384,60 @@ export const getJobs = (keyword: string, location: string) => {
   });
 };
 
-// export const getAllJobs = (keyword: string) => {
-//   const keywordExp = `%${keyword}%`;
+export const getJobsBy = (
+  keyword: string,
+  location: string,
+  field: string,
+  value: string
+): Promise<Job[] | null> => {
+  const keywordExp = `%${keyword}%`;
+  const locationExp = `%${location}%`;
 
-//   const jobsQuery = mysql.format(
-//     "SELECT * FROM Job WHERE title LIKE ? OR LOWER(requierements) LIKE LOWER(?)",
-//     [keywordExp, keywordExp]
-//   );
+  const getJobsByQuery = mysql.format(
+    "SELECT * FROM Job WHERE title LIKE ? AND location LIKE ? AND ??=?",
+    [keywordExp, locationExp, field, value]
+  );
 
-//   return new Promise<jobData[] | null>((resolve) => {
-//     try {
-//       pool.getConnection((error, con) => {
-//         if (error) throw new Error(error.message);
+  return new Promise((resolve) => {
+    try {
+      pool.getConnection((error, con) => {
+        if (error) throw new Error(error.message);
 
-//         con.query(jobsQuery, (error, results) => {
-//           if (error) throw new Error(error.message);
+        con.query(getJobsByQuery, (error, results) => {
+          if (error) throw new Error(error.message);
+          con.release();
 
-//           const rows = <RowDataPacket[]>results;
-//           let jobs: jobData[] = [];
+          const rows = <RowDataPacket[]>results;
+          let jobs: Job[] = [];
 
-//           if (rows.length !== 0) {
-//             // console.log(rows);
-//             for (const row of rows) {
-//               jobs.push({
-//                 id: row.id,
-//                 title: row.title,
-//                 location: row.location,
-//                 company: row.company,
-//                 companyRate: row.company_rate,
-//                 publicationDate: new Date(
-//                   row.publication_date
-//                 ).toLocaleDateString(),
-//                 description: row.description,
-//                 salary: row.salary,
-//                 responsabilities: row.responsabilities,
-//                 requierements: row.requierements,
-//               });
-//             }
-//             resolve(jobs);
-//           } else {
-//             resolve(null);
-//           }
-//         });
-//       });
-//     } catch (error: any) {
-//       console.log(error.message);
-//       resolve(null);
-//     }
-//   });
-// };
+          if (rows.length !== 0) {
+            // console.log(rows);
+
+            for (const row of rows) {
+              jobs.push({
+                id: row.id,
+                title: row.title,
+                location: row.location,
+                company: row.company,
+                companyRate: row.company_rate,
+                publicationDate: new Date(
+                  row.publication_date
+                ).toLocaleDateString(),
+                description: row.description,
+                salary: row.salary,
+                responsabilities: row.responsabilities,
+                requierements: row.requierements,
+              });
+            }
+            resolve(jobs);
+          } else {
+            resolve(jobs);
+          }
+        });
+      });
+    } catch (error: any) {
+      console.log(error.message);
+      resolve(null);
+    }
+  });
+};
