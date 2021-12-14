@@ -1,16 +1,16 @@
 import { FC } from "react";
 
+import type Job from "../../models/Job";
+
 const JobCard: FC<{
-  job: any;
-  selectedId: string;
-  onSelected(job: any): void;
+  job: Job;
+  selectedJobId: string;
+  onSelected(job: Job): void;
 }> = function (props) {
-  const { selectedId, job, onSelected } = props;
+  const { selectedJobId, job, onSelected } = props;
 
   let cardClasses = "p-4 cursor-pointer bg-white border";
-  if (selectedId === job.id) {
-    cardClasses += " border-black";
-  }
+  if (selectedJobId === job.id) cardClasses += " border-black";
 
   return (
     <article className={cardClasses} onClick={onSelected.bind(null, job)}>

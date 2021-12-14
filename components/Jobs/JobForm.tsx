@@ -1,8 +1,8 @@
 import { FC, FormEvent, useRef, memo } from "react";
 
 const JobForm: FC<{
-  input?: { what: string; where: string };
-  onSearch(what: string, where: string): void;
+  input?: { keyword: string; location: string };
+  onSearch(keyword: string, location: string): void;
 }> = function (props) {
   const { input, onSearch } = props;
   const whatRef = useRef<HTMLInputElement>(null);
@@ -12,8 +12,8 @@ const JobForm: FC<{
   let whereDefaultValue = "";
 
   if (input) {
-    whatDefaultValue = input.what;
-    whereDefaultValue = input.where;
+    whatDefaultValue = input.keyword;
+    whereDefaultValue = input.location;
   }
 
   const submitHandler = (event: FormEvent) => {

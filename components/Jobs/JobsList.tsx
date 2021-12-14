@@ -2,16 +2,21 @@ import { FC } from "react";
 
 import JobCard from "./JobCard";
 import LoadingSpinner from "../UI/Spinner/Spinner";
+import type Job from "../../models/Job";
 
 interface JobsListProps {
-  jobs: any[];
+  jobs: Job[];
   loading: boolean;
-  targetJob: any;
-  selectJob(job: any): void;
+  selectedJob?: Job;
+  error?: boolean;
+  selectJob(job: Job): void;
 }
 
 const JobsList: FC<JobsListProps> = function (props) {
-  const { jobs, loading, targetJob, selectJob } = props;
+  const { jobs, loading, selectedJob, error, selectJob } = props;
+
+  let selectedJobId = "";
+  if (selectedJob) selectedJobId = selectedJob.id;
 
   if (loading) {
     return (
@@ -19,6 +24,8 @@ const JobsList: FC<JobsListProps> = function (props) {
         <LoadingSpinner />
       </div>
     );
+  } else if (error) {
+    return <p>Cannot load jobs</p>;
   } else if (jobs.length === 0) {
     return <p>Jobs not found</p>;
   } else {
@@ -28,7 +35,7 @@ const JobsList: FC<JobsListProps> = function (props) {
           <li key={job.id} className="jobs-list__item">
             <JobCard
               job={job}
-              selectedId={targetJob.id}
+              selectedJobId={selectedJobId}
               onSelected={selectJob}
             />
           </li>

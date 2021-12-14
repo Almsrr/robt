@@ -1,32 +1,45 @@
-import { ChangeEvent, FC, FormEvent, useRef, memo } from "react";
+import { ChangeEvent, FC, useRef, memo } from "react";
 
 const JobFilter: FC<{ onFilter(type: string, value: string): void }> =
   function (props) {
-    //    const filterTypeRef = useRef<HTMLInputElement>(null);
-    //    const filterValueRef = useRef<HTMLInputElement>(null);
+    const { onFilter } = props;
+    const dateSelectRef = useRef<HTMLSelectElement>(null);
+    const expSelectRef = useRef<HTMLSelectElement>(null);
+    const jobTypeSelectRef = useRef<HTMLSelectElement>(null);
 
-    const filterHandler = (event: ChangeEvent) => {
-      //ERROR
-      //       const filterValue = filterRef.current!.value;
-      //       const filterType = filterRef.current!.id;
-      //       if (filterType.length === 0 || filterValue.length === 0) {
-      //         return;
-      //       }
-      //       props.onFilter(filterType, filterValue);
+    const filterByDateHandler = (event: ChangeEvent): void => {
+      const optionValue = dateSelectRef.current!.value;
+      onFilter("date-posted", optionValue);
+    };
+    const filterByExpLevelHandler = (event: ChangeEvent): void => {
+      const optionValue = expSelectRef.current!.value;
+      onFilter("exp-level", optionValue);
+    };
+    const filterJobTypeHandler = (event: ChangeEvent): void => {
+      const optionValue = jobTypeSelectRef.current!.value;
+      onFilter("job-type", optionValue);
     };
 
     return (
       <div className="flex">
         <div>
-          <select id="date" onChange={filterHandler}>
-            <option value="">Date posted</option>
-            <option value="24">Last 24 hours</option>
-            <option value="3">Last 3 days</option>
-            <option value="7">Last 7 days</option>
+          <select
+            id="date-posted"
+            onChange={filterByDateHandler}
+            ref={dateSelectRef}
+          >
+            <option value="any">Date posted</option>
+            <option value="last24hours">Last 24 hours</option>
+            <option value="last3days">Last 3 days</option>
+            <option value="last7days">Last 7 days</option>
           </select>
         </div>
         <div>
-          <select id="experience-level" onChange={filterHandler}>
+          <select
+            id="experience-level"
+            onChange={filterByExpLevelHandler}
+            ref={expSelectRef}
+          >
             <option value="">Experience level</option>
             <option value="senior">Senior level</option>
             <option value="mid">Mid level</option>
@@ -35,7 +48,11 @@ const JobFilter: FC<{ onFilter(type: string, value: string): void }> =
           </select>
         </div>
         <div>
-          <select id="job-type" onChange={filterHandler}>
+          <select
+            id="job-type"
+            onChange={filterJobTypeHandler}
+            ref={jobTypeSelectRef}
+          >
             <option value="">Job type</option>
             <option value="full-time">Full time</option>
             <option value="contract">Contract</option>
