@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getAccountBy, updateUserPhone } from "../db-api";
+import { getAccountBy, updateUserPhone } from "../../../app/db-api";
 
 export default async function handler(
   req: NextApiRequest,

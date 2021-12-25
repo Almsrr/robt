@@ -6,7 +6,7 @@ import { logout } from "../../../store/authSlice";
 import { useRouter } from "next/router";
 import useAppSelector from "../../../hooks/useAppSelector";
 import { clearAccount } from "../../../store/accountSlice";
-import { removeLocaleAccount } from "../../../app/locale-functions";
+import { removeLocaleAccount } from "../../../app/browser-api";
 
 const AccountMenu: FC<{ onCloseMenu: () => void }> = function (props) {
   const dispatch = useAppDispatch();

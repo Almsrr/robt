@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import type { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode, useEffect } from "react";
 import type { NextPage } from "next";
 
 import "../styles/globals.css";
@@ -7,6 +7,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import { Provider } from "react-redux";
 import store from "../store/index";
+import LocaleAccountProvider from "../components/LocaleAccountProvider";
 
 //New type that add getLayout property to pages
 export type NextPageWithLayout = NextPage & {
@@ -26,7 +27,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
     return (
       <Provider store={store}>
-        {componentToRender(<Component {...pageProps} />)}
+        <LocaleAccountProvider>
+          {componentToRender(<Component {...pageProps} />)}
+        </LocaleAccountProvider>
       </Provider>
     );
   };

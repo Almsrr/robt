@@ -1,22 +1,31 @@
-import { FC, FormEvent } from "react";
+import { FC, FormEvent, useRef } from "react";
 
 interface PhoneNumberFormProps {
-  countryCode: string;
-  phoneNumber: string;
-  onChangeCountryCode(countryCode: string): void;
-  onChangePhoneNumber(phoneNumber: string): void;
-  onSubmit(): void;
+  code?: string;
+  number?: string;
+  onSubmit(code: string, number: string): void;
   onCancel(): void;
 }
 
 const PhoneNumberForm: FC<PhoneNumberFormProps> = function (props) {
-  const submitHandler = (event: FormEvent) => {
+  const codeRef = useRef<HTMLSelectElement>(null);
+  const numberRef = useRef<HTMLInputElement>(null);
+
+  const defaultCode = props.code || "";
+  const defaultNumber = props.number || "";
+
+  const submitHandler = (event: FormEvent): void => {
     event.preventDefault();
-    props.onSubmit();
+    const code = codeRef.current!.value;
+    const number = numberRef.current!.value;
+
+    if (code.length === 0 || number.length === 0) return;
+
+    props.onSubmit(code, number);
   };
   return (
     <div className="w-full max-w-3xl border border-gray-300 rounded-md p-4">
-      <header>
+      <header className="mb-6">
         <h1 className="font-bold text-2xl mb-2">
           Add and verify your phone number
         </h1>
@@ -27,7 +36,7 @@ const PhoneNumberForm: FC<PhoneNumberFormProps> = function (props) {
           minute.
         </p>
       </header>
-      <form className="pt-6" onSubmit={submitHandler}>
+      <form onSubmit={submitHandler}>
         <div className="max-w-sm">
           <div className="form-row mb-4">
             <label htmlFor="country" className="block font-bold text-lg pb-1">
@@ -36,10 +45,8 @@ const PhoneNumberForm: FC<PhoneNumberFormProps> = function (props) {
             <select
               className="border border-black rounded-lg block w-full p-2"
               id="country"
-              value={props.countryCode}
-              onChange={(event) =>
-                props.onChangeCountryCode(event.target.value)
-              }
+              ref={codeRef}
+              defaultValue={defaultCode}
             >
               <option value="">Select one</option>
               <option value="+1">Dominican Republic (+1)</option>
@@ -53,10 +60,8 @@ const PhoneNumberForm: FC<PhoneNumberFormProps> = function (props) {
               type="text"
               id="phone-number"
               className="border border-black rounded-lg block w-full p-2"
-              value={props.phoneNumber}
-              onChange={(event) =>
-                props.onChangePhoneNumber(event.target.value)
-              }
+              ref={numberRef}
+              defaultValue={defaultNumber}
             />
           </div>
         </div>
@@ -82,10 +87,7 @@ const PhoneNumberForm: FC<PhoneNumberFormProps> = function (props) {
           >
             Next
           </button>
-          <button
-            className="font-bold py-3 px-6"
-            onClick={() => props.onCancel()}
-          >
+          <button className="font-bold py-3 px-6" onClick={props.onCancel}>
             Cancel
           </button>
         </div>

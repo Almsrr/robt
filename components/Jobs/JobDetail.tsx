@@ -1,5 +1,5 @@
 import { FC } from "react";
-import LoadingSpinner from "../UI/Spinner/Spinner";
+import Spinner from "../UI/Spinner/Spinner";
 
 interface JobDetailProps {
   targetJob: any;
@@ -13,7 +13,7 @@ const JobDetail: FC<JobDetailProps> = function (props) {
   if (loading) {
     return (
       <div className="flex justify-center">
-        <LoadingSpinner />
+        <Spinner />
       </div>
     );
   } else if (!targetJob) {
@@ -51,7 +51,7 @@ const JobDetail: FC<JobDetailProps> = function (props) {
           <h4 className="font-bold mt-4">Salary</h4>
           <p>{targetJob.salary}</p>
         </section>
-        <div className="">
+        <div className="pt-4">
           <button
             type="button"
             className="rounded-md bg-black text-white px-6 py-2 uppercase font-bold"

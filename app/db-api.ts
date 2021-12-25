@@ -1,7 +1,7 @@
 import mysql, { OkPacket, RowDataPacket } from "mysql2";
-import Account from "../../models/Account";
-import User from "../../models/User";
-import type Job from "../../models/Job";
+import Account from "../models/Account";
+import User from "../models/User";
+import type Job from "../models/Job";
 
 const pool = mysql.createPool({
   connectionLimit: 50,

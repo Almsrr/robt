@@ -7,7 +7,7 @@ import { setAccount } from "../../store/accountSlice";
 import useAppDispatch from "../../hooks/useAppDispatch";
 import type { NextPageWithLayout } from "../_app";
 import RegisterForm from "../../components/RegisterForm";
-import { saveAccountLocally } from "../../app/locale-functions";
+import { saveAccountLocally } from "../../app/browser-api";
 
 const RegisterPage: NextPageWithLayout = function () {
   const router = useRouter();

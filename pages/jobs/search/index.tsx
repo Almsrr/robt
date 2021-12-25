@@ -7,6 +7,7 @@ import React, {
   useReducer,
   Reducer,
   useState,
+  ReactNode,
 } from "react";
 
 import { NextPageWithLayout } from "../../_app";
@@ -18,25 +19,25 @@ import JobFilter from "../../../components/Jobs/JobFilter";
 import type Job from "../../../models/Job";
 import axios from "axios";
 
-type UserInput = {
+type UserSearch = {
   keyword: string;
   location: string;
 };
 
-type JobData = {
+type JobsState = {
   list: Job[];
   isLoading: boolean;
   error: boolean;
-  userInput: UserInput;
+  userInput: UserSearch;
 };
 
-type JobDataAction = {
+type JobsAction = {
   type: string;
   payload?: Job[];
-  input?: UserInput;
+  input?: UserSearch;
 };
 
-const jobsReducer: Reducer<JobData, JobDataAction> = (state, action) => {
+const jobsReducer: Reducer<JobsState, JobsAction> = (state, action) => {
   const { type, payload, input } = action;
   switch (type) {
     case "PENDING":
@@ -68,14 +69,15 @@ const jobsReducer: Reducer<JobData, JobDataAction> = (state, action) => {
   }
 };
 
-const initalState: JobData = {
+const initalState: JobsState = {
   list: [],
   isLoading: true,
   error: false,
   userInput: { keyword: "", location: "" },
 };
+
 const SearchJobsPage: NextPageWithLayout = function () {
-  const [jobs, dispatchjobs] = useReducer<typeof jobsReducer>(
+  const [jobs, dispatchJobs] = useReducer<typeof jobsReducer>(
     jobsReducer,
     initalState
   );
@@ -88,7 +90,7 @@ const SearchJobsPage: NextPageWithLayout = function () {
 
   const searchJobsHandler = useCallback(
     (keyword: string, location: string): void => {
-      dispatchjobs({ type: "PENDING" });
+      dispatchJobs({ type: "PENDING" });
       const url = `/jobs/search?what=${keyword}&where=${location}`;
       router.replace(url);
     },
@@ -109,15 +111,15 @@ const SearchJobsPage: NextPageWithLayout = function () {
           break;
       }
       // console.log(url);
-      dispatchjobs({ type: "PENDING" });
+      dispatchJobs({ type: "PENDING" });
       axios
         .get<Job[]>(url)
         .then((response) => {
           setTargetJob(response.data[0]);
-          dispatchjobs({ type: "COMPLETED", payload: response.data });
+          dispatchJobs({ type: "COMPLETED", payload: response.data });
         })
         .catch((e: any) => {
-          dispatchjobs({ type: "ERROR" });
+          dispatchJobs({ type: "ERROR" });
           console.log(e);
         });
     },
@@ -125,7 +127,6 @@ const SearchJobsPage: NextPageWithLayout = function () {
   );
 
   useEffect(() => {
-    console.log("EFFECT!");
     const { what, where } = router.query;
     const whatInputWord = what?.toString();
     const whereInputWord = where?.toString();
@@ -135,7 +136,7 @@ const SearchJobsPage: NextPageWithLayout = function () {
         .get<Job[]>(`/api/jobs?what=${whatInputWord}&where=${whereInputWord}`)
         .then((response) => {
           setTargetJob(response.data[0]);
-          dispatchjobs({
+          dispatchJobs({
             type: "COMPLETED",
             payload: response.data,
             input: { keyword: whatInputWord, location: whereInputWord },
@@ -146,7 +147,7 @@ const SearchJobsPage: NextPageWithLayout = function () {
             // handle axios error
           }
           console.log(e.message);
-          dispatchjobs({ type: "ERROR" });
+          dispatchJobs({ type: "ERROR" });
         });
     }
   }, [router.query]);
@@ -185,7 +186,7 @@ const SearchJobsPage: NextPageWithLayout = function () {
   );
 };
 
-SearchJobsPage.getLayout = function (page: ReactElement) {
+SearchJobsPage.getLayout = (page: ReactElement): ReactNode => {
   return <Layout>{page}</Layout>;
 };
 

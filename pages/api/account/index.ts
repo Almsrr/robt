@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { createNewAccount, createNewUser } from "../db-api";
+import { createNewAccount, createNewUser } from "../../../app/db-api";
 import { v4 as uuidv4 } from "uuid";
 
 export default async function handler(

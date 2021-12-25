@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type Job from "../../../models/Job";
-import { getJobs, getJobsBy } from "../db-api";
+import { getJobs, getJobsBy } from "../../../app/db-api";
 
 export default async function handler(
   req: NextApiRequest,

@@ -7,7 +7,7 @@ import { login } from "../../store/authSlice";
 import { setAccount } from "../../store/accountSlice";
 import type { NextPageWithLayout } from "../_app";
 import LoginForm from "../../components/LoginForm";
-import { saveAccountLocally } from "../../app/locale-functions";
+import { saveAccountLocally } from "../../app/browser-api";
 
 const LoginPage: NextPageWithLayout = function () {
   const router = useRouter();

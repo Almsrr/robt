@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 
 import type { NextPageWithLayout } from "../_app";
 import Layout from "../../components/UI/Layout";
@@ -7,7 +7,7 @@ import router from "next/router";
 import JobForm from "../../components/Jobs/JobForm";
 
 const Jobs: NextPageWithLayout = function () {
-  const searchJobs = (what: string, where: string) => {
+  const searchJobs = (what: string, where: string): void => {
     if (what.length === 0 || where.length === 0) return;
 
     const url = `/jobs/search?what=${what}&where=${where}`;
@@ -38,7 +38,7 @@ const Jobs: NextPageWithLayout = function () {
   );
 };
 
-Jobs.getLayout = (page: ReactElement) => {
+Jobs.getLayout = (page: ReactElement): ReactNode => {
   return <Layout>{page}</Layout>;
 };
 

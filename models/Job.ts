@@ -1,4 +1,4 @@
-type Job = {
+export default interface Job {
   id: string;
   title: string;
   location: string;
@@ -9,6 +9,4 @@ type Job = {
   salary: number;
   responsabilities: string[];
   requierements: string[];
-};
-
-export default Job;
+}

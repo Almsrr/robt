@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
-
-import { FormEvent, ReactElement, useRef } from "react";
+import { FormEvent, ReactElement, ReactNode, useRef } from "react";
 
 import { NextPageWithLayout } from "../_app";
 import Layout from "../../components/UI/Layout";
@@ -13,7 +12,7 @@ const ChangeEmailPage: NextPageWithLayout = function () {
 
   const { accountId, email, role } = router.query;
 
-  const saveEmailHandler = (event: FormEvent) => {
+  const saveEmailHandler = (event: FormEvent): void => {
     event.preventDefault();
 
     const newEmail = emailRef.current!.value;
@@ -38,18 +37,18 @@ const ChangeEmailPage: NextPageWithLayout = function () {
       });
   };
 
-  const goToProfile = () => {
+  const goToProfile = (): void => {
     router.push(`/${role}/${accountId}`);
   };
 
   return (
-    <main>
-      <section className="flex flex-col items-center py-8">
+    <main className="py-8">
+      <section className="flex flex-col items-center">
         <div className="max-w-xl border border-gray-300 rounded-md p-4">
-          <header>
+          <header className="mb-6">
             <h1 className="font-bold text-2xl">Changing email for {email}</h1>
           </header>
-          <form className="py-6" onSubmit={saveEmailHandler}>
+          <form className="pb-6" onSubmit={saveEmailHandler}>
             <div className="form-row mb-4">
               <label htmlFor="email" className="font-bold text-lg pb-2">
                 New email address
@@ -90,7 +89,7 @@ const ChangeEmailPage: NextPageWithLayout = function () {
   );
 };
 
-ChangeEmailPage.getLayout = function (page: ReactElement) {
+ChangeEmailPage.getLayout = function (page: ReactElement): ReactNode {
   return <Layout>{page}</Layout>;
 };
 

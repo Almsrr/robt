@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export interface Account {
+export interface AccountState {
   id: string | null;
   role: string | null;
 }
 
-const accountInitialState: Account = {
+const accountInitialState: AccountState = {
   id: null,
   role: null,
 };
@@ -14,7 +14,7 @@ const accountSlice = createSlice({
   name: "Account",
   initialState: accountInitialState,
   reducers: {
-    setAccount(state, action: PayloadAction<Account>) {
+    setAccount(state, action: PayloadAction<AccountState>) {
       state.id = action.payload.id;
       state.role = action.payload.role;
     },

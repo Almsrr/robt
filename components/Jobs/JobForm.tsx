@@ -8,23 +8,16 @@ const JobForm: FC<{
   const whatRef = useRef<HTMLInputElement>(null);
   const whereRef = useRef<HTMLInputElement>(null);
 
-  let whatDefaultValue = "";
-  let whereDefaultValue = "";
+  const whatDefaultValue = input?.keyword || "";
+  const whereDefaultValue = input?.location || "";
 
-  if (input) {
-    whatDefaultValue = input.keyword;
-    whereDefaultValue = input.location;
-  }
-
-  const submitHandler = (event: FormEvent) => {
+  const submitHandler = (event: FormEvent): void => {
     event.preventDefault();
-
     const what = whatRef.current!.value;
     const where = whereRef.current!.value;
 
-    if (what.length === 0 || where.length === 0) {
-      return;
-    }
+    if (what.length === 0 || where.length === 0) return;
+
     onSearch(what, where);
   };
 

@@ -1,26 +1,25 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState, ReactNode } from "react";
 
 import type { NextPageWithLayout } from "../../_app";
 import Layout from "../../../components/UI/Layout";
 import axios from "axios";
-import Resume from "../../../components/Resume";
-import ContactInformation from "../../../components/ContactInformation";
+import Resume from "../../../components/JobSeeker/Resume";
+import ContactInformation from "../../../components/JobSeeker/ContactInformation";
 import Spinner from "../../../components/UI/Spinner/Spinner";
 
-interface AccountInfo {
+interface Account {
   id: string;
   email: string;
   role: string;
-  firstName: string | null;
-  lastName: string | null;
-  phoneNumber: string | null;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
 }
 
-const Profilepage: NextPageWithLayout = function () {
-  const [account, setAccount] = useState<AccountInfo>({
+const ProfilePage: NextPageWithLayout = function () {
+  const [account, setAccount] = useState<Account>({
     id: "",
     email: "",
     role: "",
@@ -29,26 +28,19 @@ const Profilepage: NextPageWithLayout = function () {
     phoneNumber: "",
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [previewMode, setPreviewMode] = useState<boolean>(true);
+  const [inPreviewMode, setInPreviewMode] = useState<boolean>(true);
   const router = useRouter();
 
-  let userFirstName = "";
-  let userLastName = "";
-  let userPhoneNumber = "";
-  let userFullName = "Your name";
+  const fullName =
+    account.firstName && account.lastName
+      ? `${account.firstName} ${account.lastName}`
+      : "Your name";
 
-  if (account.firstName && account.lastName) {
-    userFullName = `${account.firstName} ${account.lastName}`;
-    userFirstName = account.firstName;
-    userLastName = account.lastName;
-  }
-  if (account.phoneNumber) userPhoneNumber = account.phoneNumber;
-
-  const togglePreviewHandler = () => {
-    setPreviewMode((prevState) => !prevState);
+  const togglePreviewHandler = (): void => {
+    setInPreviewMode((prevState) => !prevState);
   };
 
-  const saveInfoHandler = (firstName: string, lastName: string) => {
+  const saveInfoHandler = (firstName: string, lastName: string): void => {
     setIsLoading(true);
     axios
       .put("/api/account/update-names", {
@@ -60,7 +52,7 @@ const Profilepage: NextPageWithLayout = function () {
         if (response.data.ok) {
           alert("Information updated successfully!");
 
-          setPreviewMode(true);
+          setInPreviewMode(true);
           setAccount({ ...account, firstName, lastName });
         } else {
           alert(response.data.info);
@@ -75,92 +67,89 @@ const Profilepage: NextPageWithLayout = function () {
   };
 
   useEffect(() => {
-    // console.log("EFFECT!");
-    const id = router.query.accountId;
-    const url = `/api/account/${id}`;
-    axios
-      .get(url)
-      .then((response) => {
-        const fetchedAccount = response.data;
-        // console.log(response.data);
+    const id = router.query.accountId ?? false;
 
-        const currentAccount: AccountInfo = {
-          id: fetchedAccount.id,
-          email: fetchedAccount.email,
-          role: fetchedAccount.role,
-          firstName: fetchedAccount.firstName,
-          lastName: fetchedAccount.lastName,
-          phoneNumber: fetchedAccount.phoneNumber,
-        };
+    if (id) {
+      const url = `/api/account/${id}`;
+      axios
+        .get(url)
+        .then((response) => {
+          const fetchedAccount = response.data;
+          // console.log(response.data);
 
-        setAccount(currentAccount);
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("Something went wrong");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+          const currentAccount: Account = {
+            id: fetchedAccount.id,
+            email: fetchedAccount.email,
+            role: fetchedAccount.role,
+            firstName: fetchedAccount.firstName,
+            lastName: fetchedAccount.lastName,
+            phoneNumber: fetchedAccount.phoneNumber,
+          };
+
+          setAccount(currentAccount);
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("Something went wrong");
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
   }, [router]);
 
   return (
-    <main>
-      <div className="flex flex-col items-center py-8">
-        <div className="resume">
-          <header className="mb-5 flex items-center">
-            <Image
-              src="/download.png"
-              alt="user-profile-picture"
-              width={100}
-              height={100}
-            />
-            <div className="ml-4">
-              {isLoading && <Spinner />}
-              {!isLoading && (
-                <h2 className="font-bold text-4xl">{userFullName}</h2>
-              )}
-            </div>
-          </header>
-          <div>
-            <Resume />
-            <ContactInformation
-              id={account.id}
-              firstName={userFirstName}
-              lastName={userLastName}
-              email={account.email}
-              role={account.role}
-              phoneNumber={userPhoneNumber}
-              previewMode={previewMode}
-              onTogglePreview={togglePreviewHandler}
-              onSave={saveInfoHandler}
-            />
-
-            <section className="border border-gray-300 rounded-md p-3">
-              <header>
-                <div className="flex justify-between mb-4">
-                  <h2 className="font-bold text-lg">Jobs preferences</h2>
-                  <button title="edit" type="button" className="px-2 text-md">
-                    <i className="fas fa-edit"></i>
-                  </button>
-                </div>
-              </header>
-              <div className="pb-5 text-gray-500">
-                <p className="text-sm">
-                  Save specific details like desired pay and schedule that help
-                  us match you with better jobs
-                </p>
-              </div>
-            </section>
+    <main className="flex flex-col items-center py-8">
+      <div className="w-full max-w-xl">
+        <header className="mb-5 flex items-center">
+          <Image
+            src="/download.png"
+            alt="user-profile-picture"
+            width={100}
+            height={100}
+          />
+          <div className="ml-4">
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <h2 className="font-bold text-4xl">{fullName}</h2>
+            )}
           </div>
-        </div>
+        </header>
+        <Resume />
+        <ContactInformation
+          id={account.id}
+          firstName={account.firstName}
+          lastName={account.lastName}
+          fullName={fullName}
+          email={account.email}
+          role={account.role}
+          phoneNumber={account.phoneNumber}
+          inPreview={inPreviewMode}
+          onTogglePreview={togglePreviewHandler}
+          onSave={saveInfoHandler}
+        />
+        <section className="border border-gray-300 rounded-md p-3">
+          <header className="flex justify-between mb-4">
+            <h2 className="font-bold text-lg">Jobs preferences</h2>
+            <button title="edit" type="button" className="px-2 text-md">
+              <i className="fas fa-edit"></i>
+            </button>
+          </header>
+          <div className="pb-5 text-gray-500">
+            <p className="text-sm">
+              Save specific details like desired pay and schedule that help us
+              match you with better jobs
+            </p>
+          </div>
+        </section>
       </div>
     </main>
   );
 };
 
-Profilepage.getLayout = (page: ReactElement) => {
+ProfilePage.getLayout = (page: ReactElement): ReactNode => {
   return <Layout>{page}</Layout>;
 };
 
-export default Profilepage;
+export default ProfilePage;

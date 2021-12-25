@@ -8,20 +8,20 @@ interface PhoneNumberCodeInputProps {
 }
 
 const PhoneNumberCodeInput: FC<PhoneNumberCodeInputProps> = function (props) {
-  const [code, setCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const codeRef = useRef<HTMLInputElement>(null);
   const { onBack, onReceived } = props;
 
-  let nextStateTimer = useRef<NodeJS.Timeout>();
-  let codeTimer = useRef<NodeJS.Timeout>();
-  let loadingTimer = useRef<NodeJS.Timeout>();
+  const nextStateTimer = useRef<NodeJS.Timeout>();
+  const codeTimer = useRef<NodeJS.Timeout>();
+  const loadingTimer = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     loadingTimer.current = setTimeout(() => {
       setIsLoading(true);
     }, 3500);
     nextStateTimer.current = setTimeout(() => {
-      setCode("GS3254");
+      codeRef.current!.value = "GS3254";
       setIsLoading(false);
     }, 3700);
     codeTimer.current = setTimeout(() => {
@@ -38,10 +38,10 @@ const PhoneNumberCodeInput: FC<PhoneNumberCodeInputProps> = function (props) {
 
   return (
     <div className="w-full max-w-sm border border-gray-300 rounded-md p-4">
-      <header>
+      <header className="mb-4">
         <h1 className="font-bold text-2xl">We sent you a code!</h1>
       </header>
-      <form className="pt-4">
+      <form>
         <div className="form-row">
           <div className="flex items-center">
             <input
@@ -49,8 +49,7 @@ const PhoneNumberCodeInput: FC<PhoneNumberCodeInputProps> = function (props) {
               id="phone-code"
               className="border border-black rounded-lg block p-2 w-9/12"
               placeholder="Code"
-              value={code}
-              onChange={(event) => setCode(event.target.value)}
+              ref={codeRef}
             />
             {isLoading && (
               <div className="ml-4">
