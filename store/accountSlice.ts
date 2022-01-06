@@ -1,13 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import Account from "../models/Account";
 
-export interface AccountState {
-  id: string | null;
-  role: string | null;
-}
+export type AccountState = Pick<Account, "id" | "role">;
 
 const accountInitialState: AccountState = {
-  id: null,
-  role: null,
+  id: "",
+  role: "",
 };
 
 const accountSlice = createSlice({
@@ -19,8 +17,8 @@ const accountSlice = createSlice({
       state.role = action.payload.role;
     },
     clearAccount(state) {
-      state.id = null;
-      state.role = null;
+      state.id = "";
+      state.role = "";
     },
   },
 });

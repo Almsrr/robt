@@ -5,7 +5,6 @@ interface User {
   id: string;
   firstName: string;
   lastName: string;
-  fullName: string;
   email: string;
   role: string;
   phoneNumber: string;
@@ -17,8 +16,6 @@ interface User {
 const ContactInformation: FC<User> = function (props) {
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
-
-  const hasPhoneNumber = props.phoneNumber ? true : false;
 
   const editEmailUrl = `/account/change-email?accountId=${props.id}&email=${props.email}&role=${props.role}`;
   const updatePhoneNumberUrl = `/account/change-phone-number?accountId=${props.id}&role=${props.role}`;
@@ -35,9 +32,9 @@ const ContactInformation: FC<User> = function (props) {
 
   const preview = (
     <div className="pb-5 text-gray-500">
-      <p className="text-sm mb-1">{props.fullName}</p>
+      <p className="text-sm mb-1">{`${props.firstName} ${props.lastName}`}</p>
       <p className="text-sm mb-1">{props.email}</p>
-      {hasPhoneNumber ? (
+      {props.phoneNumber ? (
         <p className="text-sm">{props.phoneNumber}</p>
       ) : (
         <button className="text-sm font-bold" onClick={props.onTogglePreview}>
@@ -107,7 +104,7 @@ const ContactInformation: FC<User> = function (props) {
             </span>
           </label>
           <p>
-            {hasPhoneNumber ? (
+            {props.phoneNumber ? (
               <>
                 {props.phoneNumber}
                 <Link href={updatePhoneNumberUrl}>

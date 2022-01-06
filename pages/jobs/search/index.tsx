@@ -18,24 +18,7 @@ import JobForm from "../../../components/Jobs/JobForm";
 import JobFilter from "../../../components/Jobs/JobFilter";
 import type Job from "../../../models/Job";
 import axios from "axios";
-
-type UserSearch = {
-  keyword: string;
-  location: string;
-};
-
-type JobsState = {
-  list: Job[];
-  isLoading: boolean;
-  error: boolean;
-  userInput: UserSearch;
-};
-
-type JobsAction = {
-  type: string;
-  payload?: Job[];
-  input?: UserSearch;
-};
+import { JobsState, JobsAction } from "../../../models/JobsSearch/index";
 
 const jobsReducer: Reducer<JobsState, JobsAction> = (state, action) => {
   const { type, payload, input } = action;

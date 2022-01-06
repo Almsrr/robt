@@ -28,7 +28,7 @@ const ProfilePage: NextPageWithLayout = function () {
     phoneNumber: "",
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [inPreviewMode, setInPreviewMode] = useState<boolean>(true);
+  const [isInPreviewMode, setIsInPreviewMode] = useState<boolean>(true);
   const router = useRouter();
 
   const fullName =
@@ -37,7 +37,7 @@ const ProfilePage: NextPageWithLayout = function () {
       : "Your name";
 
   const togglePreviewHandler = (): void => {
-    setInPreviewMode((prevState) => !prevState);
+    setIsInPreviewMode((prevState) => !prevState);
   };
 
   const saveInfoHandler = (firstName: string, lastName: string): void => {
@@ -52,7 +52,7 @@ const ProfilePage: NextPageWithLayout = function () {
         if (response.data.ok) {
           alert("Information updated successfully!");
 
-          setInPreviewMode(true);
+          setIsInPreviewMode(true);
           setAccount({ ...account, firstName, lastName });
         } else {
           alert(response.data.info);
@@ -60,10 +60,8 @@ const ProfilePage: NextPageWithLayout = function () {
       })
       .catch((error) => {
         console.log(error.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
       });
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -121,11 +119,10 @@ const ProfilePage: NextPageWithLayout = function () {
           id={account.id}
           firstName={account.firstName}
           lastName={account.lastName}
-          fullName={fullName}
           email={account.email}
           role={account.role}
           phoneNumber={account.phoneNumber}
-          inPreview={inPreviewMode}
+          inPreview={isInPreviewMode}
           onTogglePreview={togglePreviewHandler}
           onSave={saveInfoHandler}
         />
