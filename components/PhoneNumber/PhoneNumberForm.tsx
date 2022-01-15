@@ -1,4 +1,4 @@
-import { FC, FormEvent, useRef } from "react";
+import { ChangeEvent, FC, FormEvent, useRef, useState } from "react";
 
 interface PhoneNumberFormProps {
   code?: string;
@@ -8,20 +8,23 @@ interface PhoneNumberFormProps {
 }
 
 const PhoneNumberForm: FC<PhoneNumberFormProps> = function (props) {
-  const codeRef = useRef<HTMLSelectElement>(null);
-  const numberRef = useRef<HTMLInputElement>(null);
+  const [enteredCode, setEnteredCode] = useState<string>("");
+  const [enteredNum, setEnteredNum] = useState<string>("");
 
-  const defaultCode = props.code || "";
-  const defaultNumber = props.number || "";
+  const enteredCodeHandler = (event: ChangeEvent<HTMLSelectElement>): void => {
+    setEnteredCode(event.target.value);
+  };
+
+  const enteredNumHandler = (event: ChangeEvent<HTMLInputElement>): void => {
+    setEnteredNum(event.target.value);
+  };
 
   const submitHandler = (event: FormEvent): void => {
     event.preventDefault();
-    const code = codeRef.current!.value;
-    const number = numberRef.current!.value;
 
-    if (code.length === 0 || number.length === 0) return;
+    if (enteredCode.length === 0 || enteredNum.length === 0) return;
 
-    props.onSubmit(code, number);
+    props.onSubmit(enteredCode, enteredNum);
   };
   return (
     <div className="w-full max-w-3xl border border-gray-300 rounded-md p-4">
@@ -45,8 +48,8 @@ const PhoneNumberForm: FC<PhoneNumberFormProps> = function (props) {
             <select
               className="border border-black rounded-lg block w-full p-2"
               id="country"
-              ref={codeRef}
-              defaultValue={defaultCode}
+              value={enteredCode}
+              onChange={enteredCodeHandler}
             >
               <option value="">Select one</option>
               <option value="+1">Dominican Republic (+1)</option>
@@ -60,8 +63,8 @@ const PhoneNumberForm: FC<PhoneNumberFormProps> = function (props) {
               type="text"
               id="phone-number"
               className="border border-black rounded-lg block w-full p-2"
-              ref={numberRef}
-              defaultValue={defaultNumber}
+              value={enteredNum}
+              onChange={enteredNumHandler}
             />
           </div>
         </div>
