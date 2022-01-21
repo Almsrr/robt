@@ -105,9 +105,8 @@ const ChangePhoneNumberPage: NextPageWithLayout = function () {
       });
   };
 
-  let stage;
   if (isAuthenticating) {
-    stage = (
+    return (
       <div className="w-full max-w-md border border-gray-300 rounded-md p-4">
         <header className="mb-4">
           <h1 className="font-bold text-2xl mb-1">One last step</h1>
@@ -140,33 +139,35 @@ const ChangePhoneNumberPage: NextPageWithLayout = function () {
         </form>
       </div>
     );
-  } else if (isWaitingCode) {
-    stage = (
+  }
+
+  if (isWaitingCode) {
+    return (
       <PhoneNumberCodeInput
         onReceived={onCodeReceived}
         onBack={onCancelWaiting}
       />
     );
-  } else {
-    stage = (
-      <PhoneNumberForm
-        code={countryCode}
-        number={phoneNumber}
-        onSubmit={submitPhoneNumberHandler}
-        onCancel={goToProfile}
-      />
-    );
   }
 
   return (
-    <main>
-      <section className="flex flex-col items-center py-8">{stage}</section>
-    </main>
+    <PhoneNumberForm
+      code={countryCode}
+      number={phoneNumber}
+      onSubmit={submitPhoneNumberHandler}
+      onCancel={goToProfile}
+    />
   );
 };
 
 ChangePhoneNumberPage.getLayout = function (page: ReactElement): ReactNode {
-  return <Layout>{page}</Layout>;
+  return (
+    <Layout>
+      <main>
+        <section className="flex flex-col items-center py-8">{page}</section>
+      </main>
+    </Layout>
+  );
 };
 
 export default ChangePhoneNumberPage;
