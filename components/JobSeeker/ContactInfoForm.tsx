@@ -13,8 +13,8 @@ const ContactInfoForm: FC<ContactInfoProps> = function (props) {
   const [enteredFirstName, setEnteredFirstName] = useState(props.firstName);
   const [enteredLastName, setEnteredLastName] = useState(props.lastName);
 
-  const editEmailUrl = `/account/change-email?accountId=${props.id}&email=${props.email}&role=${props.role}`;
-  const updatePhoneNumberUrl = `/account/change-phone-number?accountId=${props.id}&role=${props.role}`;
+  const editEmailUrl = `/account/change-email?accountId=${props.id}`;
+  const updatePhoneNumberUrl = `/account/change-phone-number?accountId=${props.id}`;
 
   const firstNameHandler = (e: ChangeEvent<HTMLInputElement>): void => {
     setEnteredFirstName(e.target.value);

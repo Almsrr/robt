@@ -18,7 +18,7 @@ interface dbResult {
   data: any;
 }
 
-interface accountData {
+export interface AccountData {
   id: string;
   email: string;
   password: string;
@@ -39,7 +39,7 @@ export const getAccountBy = (field: string, value: string) => {
     value,
   ]);
 
-  return new Promise<accountData | null>((resolve) => {
+  return new Promise<AccountData | null>((resolve) => {
     try {
       pool.getConnection((error, con) => {
         if (error) throw new Error(error.message);

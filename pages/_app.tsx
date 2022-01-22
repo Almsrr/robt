@@ -10,17 +10,17 @@ import store from "../store/index";
 import LocaleAccountProvider from "../components/LocaleAccountProvider";
 
 //New type that add getLayout property to pages
-export type NextPageWithLayout = NextPage & {
+export type NextPageWithLayout<P> = NextPage<P> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
 /*New type that overide the type of component in AppProps.
 NextPageWithLayout type instead of NextPage*/
-type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout;
+type AppPropsWithLayout<P> = AppProps<P> & {
+  Component: NextPageWithLayout<P>;
 };
 
-function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+function MyApp({ Component, pageProps }: AppPropsWithLayout<any>) {
   const getPage = () => {
     //Choose which page should be rendered
     const componentToRender = Component.getLayout ?? ((page) => page);
