@@ -8,8 +8,8 @@ interface PhoneNumberFormProps {
 }
 
 const PhoneNumberForm: FC<PhoneNumberFormProps> = function (props) {
-  const [enteredCode, setEnteredCode] = useState<string>("");
-  const [enteredNum, setEnteredNum] = useState<string>("");
+  const [enteredCode, setEnteredCode] = useState("");
+  const [enteredNum, setEnteredNum] = useState("");
 
   const enteredCodeHandler = (event: ChangeEvent<HTMLSelectElement>): void => {
     setEnteredCode(event.target.value);
