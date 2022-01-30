@@ -18,7 +18,7 @@ interface Account {
   phoneNumber: string;
 }
 
-const ProfilePage: NextPageWithLayout = function () {
+const ProfilePage: NextPageWithLayout<any> = function () {
   const [account, setAccount] = useState<Account>({
     id: "",
     email: "",
@@ -37,7 +37,7 @@ const ProfilePage: NextPageWithLayout = function () {
       : "Your name";
 
   const togglePreviewHandler = (): void => {
-    setIsInPreviewMode((prevState) => !prevState);
+    setIsInPreviewMode(prevState => !prevState);
   };
 
   const saveInfoHandler = (firstName: string, lastName: string): void => {
@@ -48,9 +48,9 @@ const ProfilePage: NextPageWithLayout = function () {
         firstName,
         lastName,
       })
-      .then((response) => {
+      .then(response => {
         if (response.data.ok) {
-          alert("Information updated successfully!");
+          alert("INFORMATION UPDATED SUCCESSFULLY");
 
           setIsInPreviewMode(true);
           setAccount({ ...account, firstName, lastName });
@@ -58,7 +58,7 @@ const ProfilePage: NextPageWithLayout = function () {
           alert(response.data.info);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error.message);
       });
     setIsLoading(false);
@@ -71,7 +71,7 @@ const ProfilePage: NextPageWithLayout = function () {
       const url = `/api/account/${id}`;
       axios
         .get(url)
-        .then((response) => {
+        .then(response => {
           const fetchedAccount = response.data;
           // console.log(response.data);
 
@@ -86,7 +86,7 @@ const ProfilePage: NextPageWithLayout = function () {
 
           setAccount(currentAccount);
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
           alert("Something went wrong");
         })
