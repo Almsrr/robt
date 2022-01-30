@@ -19,7 +19,7 @@ export default async function handler(
       };
       // console.log(newAccount);
 
-      let accountCreation = await createNewAccount(newAccount);
+      const accountCreation = await createNewAccount(newAccount);
       let userWasCreated = false;
 
       if (accountCreation.success) {

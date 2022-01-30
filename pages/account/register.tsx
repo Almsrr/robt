@@ -9,16 +9,14 @@ import type { NextPageWithLayout } from "../_app";
 import RegisterForm from "../../components/RegisterForm";
 import { saveAccountLocally } from "../../app/browser-api";
 
-const RegisterPage: NextPageWithLayout = function () {
+const RegisterPage: NextPageWithLayout<any> = function () {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const registerHandler = (newAccountData: any) => {
-    // console.log(newUserAccount);
-
+  const registerHandler = (newAccountData: any): void => {
     axios
       .post("/api/account", newAccountData)
-      .then((response) => {
+      .then(response => {
         if (response.data.ok) {
           const { token, id: accountId } = response.data;
           const accountRole = newAccountData.role;
@@ -27,14 +25,14 @@ const RegisterPage: NextPageWithLayout = function () {
           dispatch(setAccount({ id: accountId, role: accountRole }));
           saveAccountLocally({ token, accountId, accountRole });
 
-          alert("Account registered successfully");
+          alert("ACCOUNT REGISTRERED SUCCESSFULLY");
           router.replace(`/${accountRole}/${accountId}/dashboard`);
         } else {
           alert(response.data.info);
         }
       })
-      .catch((error: any) => {
-        console.log(error.message);
+      .catch((e: any) => {
+        console.log(e.message);
       });
   };
 

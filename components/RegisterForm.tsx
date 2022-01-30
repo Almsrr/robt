@@ -1,34 +1,43 @@
-import React, { FC, useRef } from "react";
+import React, { ChangeEvent, FC, useState } from "react";
 
 import CustomLink from "./UI/CustomLink";
 
 const RegisterForm: FC<{ onRegister: (data: any) => void }> = function (props) {
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-  const keepSignedRef = useRef<HTMLInputElement>(null);
-  const employeerRef = useRef<HTMLInputElement>(null);
-  const jobSeekerRef = useRef<HTMLInputElement>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [keepSigned, setKeepSigned] = useState(false);
+  const [role, setRole] = useState("");
 
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const email = emailRef.current!.value;
-    const password = passwordRef.current!.value;
-
-    if (email.length === 0) {
-      return;
-    }
-    if (password.length === 0) {
+    if (email.trim() === "" || password.trim() === "") {
+      alert("EMAIL AND PASSWORD ARE REQUIRED");
       return;
     }
 
-    let role = "";
-    if (employeerRef.current!.checked) {
-      role = "employeer";
-    } else if (jobSeekerRef.current!.checked) {
-      role = "job-seeker";
+    if (role.trim() === "") {
+      alert("ROLE IS REQUIRED");
+      return;
     }
+
     props.onRegister({ email, password, role });
+  };
+
+  const emailHandler = (e: ChangeEvent<HTMLInputElement>): void => {
+    setEmail(e.target.value);
+  };
+
+  const passwordHandler = (e: ChangeEvent<HTMLInputElement>): void => {
+    setPassword(e.target.value);
+  };
+
+  const keepSignedHandler = (e: ChangeEvent<HTMLInputElement>): void => {
+    setKeepSigned(e.target.checked);
+  };
+
+  const roleHandler = (e: ChangeEvent<HTMLInputElement>): void => {
+    setRole(e.target.value);
   };
 
   return (
@@ -63,7 +72,8 @@ const RegisterForm: FC<{ onRegister: (data: any) => void }> = function (props) {
           Email Address
         </label>
         <input
-          ref={emailRef}
+          onChange={emailHandler}
+          value={email}
           type="email"
           className="form-input w-full rounded"
           id="email"
@@ -74,7 +84,8 @@ const RegisterForm: FC<{ onRegister: (data: any) => void }> = function (props) {
           Password
         </label>
         <input
-          ref={passwordRef}
+          onChange={passwordHandler}
+          value={password}
           type="password"
           className="form-input w-full rounded"
           id="password"
@@ -91,11 +102,11 @@ const RegisterForm: FC<{ onRegister: (data: any) => void }> = function (props) {
             className="flex items-center border border-gray-500 rounded-lg p-2 text-sm mb-2"
           >
             <input
+              onChange={roleHandler}
+              defaultValue="employeer"
               type="radio"
               id="employeer"
-              ref={employeerRef}
               name="role"
-              value="employeer"
               className="mr-2"
             />
             <span>Employeer</span>
@@ -105,11 +116,11 @@ const RegisterForm: FC<{ onRegister: (data: any) => void }> = function (props) {
             className="flex items-center border border-gray-500 rounded-lg p-2 text-sm"
           >
             <input
+              onChange={roleHandler}
+              defaultValue="job-seeker"
               type="radio"
               id="job-seeker"
-              ref={jobSeekerRef}
               name="role"
-              value="job-seeker"
               className="mr-2"
             />
             <span>Job seeker</span>
@@ -119,7 +130,7 @@ const RegisterForm: FC<{ onRegister: (data: any) => void }> = function (props) {
       <div className="form-row mb-4">
         <div className="flex items-center">
           <input
-            ref={keepSignedRef}
+            onChange={keepSignedHandler}
             type="checkbox"
             id="keep-signed"
             className="mr-2"
