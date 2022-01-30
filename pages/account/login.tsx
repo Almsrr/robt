@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 import axios from "axios";
-
 import useAppDispatch from "../../hooks/useAppDispatch";
 import { login } from "../../store/authSlice";
 import { setAccount } from "../../store/accountSlice";
@@ -43,7 +43,9 @@ const LoginPage: NextPageWithLayout<any> = function () {
   return (
     <main className="page-content">
       <section className="flex flex-col items-center py-8 ">
-        <span className="mb-3 text-center font-bold text-4xl">Robt</span>
+        <span className="mb-3 text-center font-bold text-4xl">
+          <Link href="/jobs">Robt</Link>
+        </span>
         <LoginForm onLogin={loginHandler} />
       </section>
     </main>

@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 import axios from "axios";
 
@@ -39,7 +40,9 @@ const RegisterPage: NextPageWithLayout<any> = function () {
   return (
     <main className="page-content">
       <section className="flex flex-col items-center py-8">
-        <span className="mb-3 text-center font-bold text-4xl">Robt</span>
+        <span className="mb-3 text-center font-bold text-4xl">
+          <Link href="/jobs">Robt</Link>
+        </span>
         <RegisterForm onRegister={registerHandler} />
       </section>
     </main>
