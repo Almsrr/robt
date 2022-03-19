@@ -3,7 +3,7 @@ import type { ReactElement } from "react";
 import type { NextPageWithLayout } from "../_app";
 import Layout from "../../components/UI/Layout";
 
-const Salaries: NextPageWithLayout = function () {
+const Salaries: NextPageWithLayout<any> = function () {
   return <h1>Salaries</h1>;
 };
 

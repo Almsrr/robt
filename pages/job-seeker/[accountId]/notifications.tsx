@@ -3,7 +3,7 @@ import type { ReactElement } from "react";
 import type { NextPageWithLayout } from "../../_app";
 import Layout from "../../../components/UI/Layout";
 
-const NotificationsPage: NextPageWithLayout = function () {
+const NotificationsPage: NextPageWithLayout<any> = function () {
   return (
     <>
       <h1>Notifications</h1>

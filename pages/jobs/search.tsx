@@ -8,17 +8,18 @@ import React, {
   Reducer,
   useState,
   ReactNode,
+  useRef,
 } from "react";
 
-import { NextPageWithLayout } from "../../_app";
-import Layout from "../../../components/UI/Layout";
-import JobsList from "../../../components/Jobs/JobsList";
-import JobDetail from "../../../components/Jobs/JobDetail";
-import JobForm from "../../../components/Jobs/JobForm";
-import JobFilter from "../../../components/Jobs/JobFilter";
-import type Job from "../../../models/Job";
+import { NextPageWithLayout } from "../_app";
+import Layout from "../../components/UI/Layout";
+import JobsList from "../../components/Jobs/JobsList";
+import JobDetail from "../../components/Jobs/JobDetail";
+import JobForm from "../../components/Jobs/JobForm";
+import JobFilter from "../../components/Jobs/JobFilter";
+import type Job from "../../models/Job";
 import axios from "axios";
-import { JobsState, JobsAction } from "../../../models/JobsSearch/index";
+import { JobsState, JobsAction } from "../../models/JobsSearch/index";
 
 const jobsReducer: Reducer<JobsState, JobsAction> = (state, action) => {
   const { type, payload, input } = action;
@@ -59,13 +60,24 @@ const initalState: JobsState = {
   userInput: { keyword: "", location: "" },
 };
 
-const SearchJobsPage: NextPageWithLayout = function () {
+interface QueryParam {
+  name: string;
+  value: string;
+}
+
+const SearchJobsPage: NextPageWithLayout<any> = function () {
   const [jobs, dispatchJobs] = useReducer<typeof jobsReducer>(
     jobsReducer,
     initalState
   );
   const [targetJob, setTargetJob] = useState<Job>();
   const router = useRouter();
+  const { what, where } = router.query;
+
+  const jobsBaseRouteRef = useRef(`api/jobs?what=${what}&where=${where}`);
+  const datePostedValueRef = useRef("");
+  const experienceLevel = useRef("");
+  const jobType = useRef("");
 
   const selectJobHandler = (job: Job): void => {
     setTargetJob(job);
@@ -80,33 +92,59 @@ const SearchJobsPage: NextPageWithLayout = function () {
     [router]
   );
 
+  const constructJobsRoute = useCallback((queryParam: QueryParam): void => {
+    const { name, value } = queryParam;
+
+    switch (name) {
+      case "date-posted":
+        if (!jobsBaseRouteRef.current.includes("datePosted")) {
+          datePostedValueRef.current = value;
+          jobsBaseRouteRef.current = jobsBaseRouteRef.current.concat(
+            `&datePosted=${value}`
+          );
+        } else {
+          jobsBaseRouteRef.current = jobsBaseRouteRef.current.replace(
+            datePostedValueRef.current,
+            value
+          );
+        }
+        break;
+      case "exp-level":
+        // jobsBaseRouteRef.current = jobsBaseRouteRef.current.concat(
+        //   `&expLevel=${value}`
+        // );
+        break;
+      case "job-type":
+        // jobsBaseRouteRef.current = jobsBaseRouteRef.current.concat(
+        //   `&expLevel=${value}`
+        // );
+        break;
+
+      default:
+        break;
+    }
+  }, []);
+
   const filterJobHandler = useCallback(
-    (type: string, value: string): void => {
-      const { what, where } = router.query;
-      let url = `/api/jobs?what=${what}&where=${where}`;
+    (name: string, value: string): void => {
+      const param = { name, value };
+      constructJobsRoute(param);
 
-      switch (type) {
-        case "date-posted":
-          if (value !== "any") url += `&datePosted=${value}`;
-          break;
+      console.log(jobsBaseRouteRef.current);
 
-        default:
-          break;
-      }
-      // console.log(url);
-      dispatchJobs({ type: "PENDING" });
-      axios
-        .get<Job[]>(url)
-        .then((response) => {
-          setTargetJob(response.data[0]);
-          dispatchJobs({ type: "COMPLETED", payload: response.data });
-        })
-        .catch((e: any) => {
-          dispatchJobs({ type: "ERROR" });
-          console.log(e);
-        });
+      // dispatchJobs({ type: "PENDING" });
+      // axios
+      //   .get<Job[]>(url)
+      //   .then(response => {
+      //     setTargetJob(response.data[0]);
+      //     dispatchJobs({ type: "COMPLETED", payload: response.data });
+      //   })
+      //   .catch((e: any) => {
+      //     dispatchJobs({ type: "ERROR" });
+      //     console.log(e);
+      //   });
     },
-    [router.query]
+    [constructJobsRoute]
   );
 
   useEffect(() => {
@@ -117,7 +155,7 @@ const SearchJobsPage: NextPageWithLayout = function () {
     if (whatInputWord && whereInputWord) {
       axios
         .get<Job[]>(`/api/jobs?what=${whatInputWord}&where=${whereInputWord}`)
-        .then((response) => {
+        .then(response => {
           setTargetJob(response.data[0]);
           dispatchJobs({
             type: "COMPLETED",

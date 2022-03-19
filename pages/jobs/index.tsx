@@ -6,7 +6,7 @@ import Recents from "../../components/PopularSearches/Recents";
 import router from "next/router";
 import JobForm from "../../components/Jobs/JobForm";
 
-const Jobs: NextPageWithLayout = function () {
+const Jobs: NextPageWithLayout<any> = function () {
   const searchJobs = (what: string, where: string): void => {
     if (what.length === 0 || where.length === 0) return;
 

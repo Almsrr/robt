@@ -54,7 +54,7 @@ const initalState: PageData = {
   isAuthenticating: false,
 };
 
-const ChangePhoneNumberPage: NextPageWithLayout = function () {
+const ChangePhoneNumberPage: NextPageWithLayout<any> = function () {
   const [
     { countryCode, phoneNumber, isWaitingCode, isAuthenticating },
     dispatch,
@@ -92,7 +92,7 @@ const ChangePhoneNumberPage: NextPageWithLayout = function () {
 
     axios
       .put(url, data)
-      .then((response) => {
+      .then(response => {
         if (response.data.ok) {
           alert("Phone number saved successfully");
           goToProfile();

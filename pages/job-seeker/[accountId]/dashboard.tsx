@@ -12,7 +12,7 @@ interface IParams extends ParsedUrlQuery {
   username: string;
 }
 
-const AccountDashboard: NextPageWithLayout = function ({
+const AccountDashboard: NextPageWithLayout<any> = function ({
   account,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
