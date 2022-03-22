@@ -1,11 +1,10 @@
+import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import { ReactElement, ReactNode, useEffect } from "react";
-import type { NextPage } from "next";
+import { Provider } from "react-redux";
 
 import "../styles/globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
-import { Provider } from "react-redux";
 import store from "../store/index";
 import LocaleAccountProvider from "../components/LocaleAccountProvider";
 
@@ -23,7 +22,7 @@ type AppPropsWithLayout<P> = AppProps<P> & {
 function MyApp({ Component, pageProps }: AppPropsWithLayout<any>) {
   const getPage = () => {
     //Choose which page should be rendered
-    const componentToRender = Component.getLayout ?? ((page) => page);
+    const componentToRender = Component.getLayout || (page => page);
 
     return (
       <Provider store={store}>

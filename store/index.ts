@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./authSlice";
-import accountSlice from "./accountSlice";
+import authReducer from "./auth-slice";
+import accountReducer from "./account-slice";
+import menuReducer from "./menu-slice";
 
 const store = configureStore({
-  reducer: { auth: authReducer, account: accountSlice },
+  reducer: { auth: authReducer, account: accountReducer, menu: menuReducer },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

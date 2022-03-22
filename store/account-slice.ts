@@ -1,16 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Account from "../models/Account";
 
-export type AccountState = Pick<Account, "id" | "role">;
-
-const accountInitialState: AccountState = {
-  id: "",
-  role: "",
-};
+interface AccountState {
+  id: string;
+  role: string;
+}
 
 const accountSlice = createSlice({
   name: "Account",
-  initialState: accountInitialState,
+  initialState: { id: "", role: "" },
   reducers: {
     setAccount(state, action: PayloadAction<AccountState>) {
       state.id = action.payload.id;
