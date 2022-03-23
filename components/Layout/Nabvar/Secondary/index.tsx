@@ -12,14 +12,15 @@ import { removeLocaleAccount } from "../../../../app/browser-api";
 import { toggleMenu, showMenu } from "../../../../store/menu-slice";
 
 export const Secondary: FC = () => {
-  const [showSec, setShowSecondary] = useState(false);
   const { id, role } = useAppSelector(state => state.account);
   const { menu } = useAppSelector(state => state);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   const showSecondary = () => {
-    dispatch(showMenu());
+    if (!menu) {
+      dispatch(showMenu());
+    }
   };
 
   const logoutHandler = () => {
@@ -52,7 +53,7 @@ export const Secondary: FC = () => {
           </Icon>
         </Button>
         {menu && (
-          <Menu onClick={showSecondary}>
+          <Menu>
             <Link to={`/${role}/${id}`}>
               <Option>Profile</Option>
             </Link>

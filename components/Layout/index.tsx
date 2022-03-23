@@ -9,21 +9,20 @@ import { Chat } from "./Chat";
 import { hideMenu } from "../../store/menu-slice";
 
 export const Layout: FC = ({ children }) => {
-  const { auth: isAuth, menu } = useAppSelector(state => state);
+  const { auth, menu } = useAppSelector(state => state);
   const dispatch = useAppDispatch();
 
-  const menuHandler = () => {
+  const closeMenu = () => {
     if (menu) {
       dispatch(hideMenu());
-      return;
     }
   };
 
   return (
-    <div onClick={menuHandler}>
+    <div onClick={closeMenu}>
       <Navbar />
       <PageContent>{children}</PageContent>
-      {isAuth && <Chat />}
+      {auth.isAuth && <Chat />}
       <Footer />
     </div>
   );
